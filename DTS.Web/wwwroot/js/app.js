@@ -62,12 +62,13 @@ var idioma =
     }
 };
 
-function convertDateTimeToTimeStamp(dateTime){
-    let newDateTime = new Date(dateTime);
-    return newDateTime.getTime() / 1000;  
+function displayValidationError(errorField, errorMessage){
+    if (validateValueIfNullOrUndefined(errorMessage)){
+        $(errorField).text(errorMessage)
+        clientErrors.push(errorMessage)
+    }
 }
 
- 
 function checkIfPropertyExistsThenGetValue(arrayObj, propertyName, callback) {
     arrayObj.forEach(function(obj) {
         if (obj.hasOwnProperty(propertyName)) {
@@ -75,9 +76,25 @@ function checkIfPropertyExistsThenGetValue(arrayObj, propertyName, callback) {
             return;
         }
     });
- 
     callback(null);
 }
+
+function convertDateTimeToTimeStamp(dateTime){
+    let newDateTime = new Date(dateTime);
+    return newDateTime.getTime() / 1000;  
+}
+
+// 
+// function checkIfPropertyExistsThenGetValue(arrayObj, propertyName, callback) {
+//     arrayObj.forEach(function(obj) {
+//         if (obj.hasOwnProperty(propertyName)) {
+//             callback(obj[propertyName]);
+//             return;
+//         }
+//     });
+// 
+//     callback(null);
+// }
 function validateInput(field, value, minimumLength, maximumLength) {
  
     if (!value) {
@@ -104,6 +121,18 @@ function validateValueIfNullOrUndefined(value) {
     } else {
         return true;  
     }
+}
+//
+function clearErrorMessages(){
+//     displayValidationError('#errorFieldTitle', '')
+//     displayValidationError('#errorFieldContent', '')
+//     displayValidationError('#errorFieldDepartmentId', '')
+//     displayValidationError('#errorFieldRequestTypeId', '')
+//
+    displayValidationError('#errorUpdateFieldTitle', '')
+    displayValidationError('#errorUpdateFieldContent', '')
+    displayValidationError('#errorUpdateFieldDepartmentId', '')
+    displayValidationError('#errorUpdateFieldRequestTypeId', '')
 }
  
 function pushNotify(changesTitle, changesText, changesStatus) {
@@ -217,7 +246,6 @@ function OnClickDelete(url, entity, returlUrl = "") {
                         console.log('ERROR:', err)
                     }
 
-
                 }
                 )
 
@@ -236,7 +264,10 @@ function OnClickDelete(url, entity, returlUrl = "") {
 }
 
 function loadDocumentFromDatabase(urlFromClient){
+ 
     $(document).ready(function() {
+        clearErrorMessages();
+        
         $.ajax({
             url: urlFromClient,
             type: 'GET',
@@ -266,13 +297,14 @@ function loadDocumentFromDatabase(urlFromClient){
 }
 
 function loadPrintDocument(urlFromClient){
-
-    $('#printDocumentTrackingCode').text('');
-    $('#printDocumentDepartmentName').text('');
-    $('#printDocumentTitle').text('');
-    $('#printDocumentContent').text('');
-    $('#printDocumentRequestTypeTitle').text('');
-    $('#printDocumentRemarks').text('');
+    //
+    //
+    // $('#printDocumentTrackingCode').text('');
+    // $('#printDocumentDepartmentName').text('');
+    // $('#printDocumentTitle').text('');
+    // $('#printDocumentContent').text('');
+    // $('#printDocumentRequestTypeTitle').text('');
+    // $('#printDocumentRemarks').text('');
 
     $.ajax({
         url: urlFromClient,

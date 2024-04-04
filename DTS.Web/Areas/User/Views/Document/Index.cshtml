@@ -198,16 +198,12 @@
         let trackingCode = "";                  
         loadDataTable(documentColumns)
         
-         $('#btnNewDocument').click(function() {                
-              trackingCode = generateTrackingCode();
-              $('#trackingCode').text(trackingCode);      
-              $('#trackingCode').css({'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif', 'font-size': '14px'});                   
-         });
+         
          
         $('.errorFieldText').css({'color': '#a83240', 'font-size': '10px'})               
        
         $(document).ready(function() {   
-            
+             
          function refreshDatatable(){
              
              let customButtons = `
@@ -230,35 +226,14 @@
             
              document.querySelector('.dataTables_wrapper .dataTables_filter').insertAdjacentHTML('beforeend', customButtons)
          }
-         
-        function displayValidationError(errorField, errorMessage){     
-            if (validateValueIfNullOrUndefined(errorMessage)){
-              $(errorField).text(errorMessage)
-              clientErrors.push(errorMessage)
-            }          
-        }
-        
-        function checkIfPropertyExistsThenGetValue(arrayObj, propertyName, callback) {
-            arrayObj.forEach(function(obj) {
-                if (obj.hasOwnProperty(propertyName)) {                       
-                    callback(obj[propertyName]);
-                    return;
-                }
-            });         
-            callback(null);
-        }
-        
-        
-        
+          
         function saveChanges(inputObject, requestMethod, url, titleChanges, message){
-           
-                
+            
                           let validateTitle = validateInput('Title', inputObject.title, 2, 50);
                           let validateContent = validateInput('Content', inputObject.content, 2, 400);
                           let validateDepartment = validateSelect('Department', inputObject.departmentId);
                           let validateRequestTypeid = validateSelect('Request Type', inputObject.requestTypeId);
-                        
-                          
+                         
                           $('.errorFieldText').text('')
                           
                           displayValidationError('#errorFieldTitle', validateTitle)
@@ -270,8 +245,7 @@
                             displayValidationError('#errorUpdateFieldContent', validateContent)
                             displayValidationError('#errorUpdateFieldDepartmentId', validateDepartment)
                             displayValidationError('#errorUpdateFieldRequestTypeId', validateRequestTypeid)
-                           
-                        
+                            
                           if (clientErrors.length < 1){                  
                               $.ajax({
                                    url: url,
@@ -365,6 +339,14 @@
                    window.print();
                 
          });
+         
+         $('#btnNewDocument').click(function() {
+                        // clearErrorMessages();
+                       trackingCode = generateTrackingCode();
+                       $('#trackingCode').text(trackingCode);      
+                       $('#trackingCode').css({'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif', 'font-size': '14px'});
+                       
+                  });
           
         $('#btnSaveChangesDocument').on('click', function (e){                   
                                  let departmentId = parseInt($('#departmentId').val());
@@ -388,7 +370,8 @@
                             });
          
           $('#btnUpdateSaveChangesDocument').on('click', function (e){         
-              
+                    e.preventDefault();
+                     e.stopPropagation(); 
     
                                           let documentId = parseInt($('#updateId').val());
                                            let departmentId = parseInt($('#updateDepartmentId').val());
