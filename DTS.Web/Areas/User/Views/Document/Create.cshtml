@@ -1,0 +1,49 @@
+﻿@model DocumentVm
+@{
+    ViewData["Title"] = "Create Document";
+}
+
+<div class="card">
+    <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
+    <div class="card-body">
+        <form class="row g-3">
+            <div class="col-md-12">
+                <label for="inputName5" class="form-label">Tracking Code:  </label>
+                <strong>
+                    @{
+                        @Model.TrackingCode
+                    }
+                </strong>
+            </div>
+            <div class="col-md-12">
+                <label for="inputEmail5" class="form-label">Title</label>
+                <input type="email" class="form-control" id="inputEmail5">
+            </div>
+            <div class="col-md-12">
+                <label  class="form-label">Content</label>
+                <textarea    cols="30" rows="10" class="form-control" style="height: 300px !important; ">
+                     </textarea>
+            </div>
+            <div class="col-md-12">
+                <label for="inputState" class="form-label">Request Type</label>
+                <select id="inputState" class="form-select" asp-items="@Model.RequestTypes">
+                    <option value="">-----------Select Request Type------------</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+      const quill = new Quill('#editor', {
+        theme: 'snow'
+      });
+    </script>
+    }

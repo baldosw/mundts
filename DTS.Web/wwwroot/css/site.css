@@ -1,0 +1,79 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+
+.toast {
+  opacity: 1; /* Set the desired opacity value (0.0 to 1.0) */
+}
+
+.table-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#side {
+  border-collapse: collapse;
+  width: 45%; /* Adjust the width as needed */
+  margin: 0;
+  padding:0;
+  background-color: red !important;
+}
+
+#side th, #side td {
+  border: 1px solid black;
+ margin: 0 !important;
+  padding:0 !important;
+  text-align: left;
+  background-color: red !important;
+}
+
+#side div{
+  margin: 0;
+}
+
+.delIconStatusDate:hover{
+  cursor: pointer;
+}
+
+/* Lower font size for all text inside the DataTable */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_empty,
+.dataTables_wrapper .dataTables_scrollHead,
+.dataTables_wrapper .dataTables_scrollHeadInner,
+.dataTables_wrapper .dataTables_scrollBody,
+.dataTables_wrapper .dataTables_scrollFoot,
+.dataTables_wrapper .dataTables_scrollFootInner {
+  font-size: 12px; /* Adjust the font size as needed */
+}
+
+/* Lower font size for table headers */
+.dataTables_wrapper table.dataTable thead th {
+  font-size: 12px; /* Adjust the font size as needed */
+}
+
+/* Lower font size for table body cells */
+.dataTables_wrapper table.dataTable tbody td {
+  font-size: 12px; /* Adjust the font size as needed */
+}
+
+

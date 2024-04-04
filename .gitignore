@@ -1,0 +1,56 @@
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+/bin/
+/obj/
+
+# .NET Core
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*/bin/*
+*/obj/*
+project.lock.json
+project.fragment.lock.json
+*.swp
+
+# Visual Studio files
+**/bin
+**/obj
+*.csproj.user
+*.resharper
+*.suo
+*.cache
+*.user
+*.sln.docstates
+*.pdb
+
+# Rider files
+.idea
+
+# NuGet
+*.nupkg
+*.pdb
+
+# Others
+*.log
+*.sqlite
+*.zip
+*.bak
+
+# Environment-based exclusions
+*_env.cs
+
+# Ignore environment-specific JSON files
+appsettings*.json
