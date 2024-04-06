@@ -65,6 +65,7 @@ var idioma =
 function displayValidationError(errorField, errorMessage){
     if (validateValueIfNullOrUndefined(errorMessage)){
         $(errorField).text(errorMessage)
+       
         clientErrors.push(errorMessage)
     }
 }
@@ -124,15 +125,7 @@ function validateValueIfNullOrUndefined(value) {
 }
 //
 function clearErrorMessages(){
-//     displayValidationError('#errorFieldTitle', '')
-//     displayValidationError('#errorFieldContent', '')
-//     displayValidationError('#errorFieldDepartmentId', '')
-//     displayValidationError('#errorFieldRequestTypeId', '')
-//
-    displayValidationError('#errorUpdateFieldTitle', '')
-    displayValidationError('#errorUpdateFieldContent', '')
-    displayValidationError('#errorUpdateFieldDepartmentId', '')
-    displayValidationError('#errorUpdateFieldRequestTypeId', '')
+    $('.errorFieldText').text('')
 }
  
 function pushNotify(changesTitle, changesText, changesStatus) {
@@ -266,7 +259,7 @@ function OnClickDelete(url, entity, returlUrl = "") {
 function loadDocumentFromDatabase(urlFromClient){
  
     $(document).ready(function() {
-        clearErrorMessages();
+        $('.errorFieldText').text('')
         
         $.ajax({
             url: urlFromClient,

@@ -240,12 +240,12 @@
                           displayValidationError('#errorFieldContent', validateContent)
                           displayValidationError('#errorFieldDepartmentId', validateDepartment)
                           displayValidationError('#errorFieldRequestTypeId', validateRequestTypeid)
-                          
+
                            displayValidationError('#errorUpdateFieldTitle', validateTitle)
                             displayValidationError('#errorUpdateFieldContent', validateContent)
                             displayValidationError('#errorUpdateFieldDepartmentId', validateDepartment)
                             displayValidationError('#errorUpdateFieldRequestTypeId', validateRequestTypeid)
-                            
+                           
                           if (clientErrors.length < 1){                  
                               $.ajax({
                                    url: url,
@@ -341,7 +341,7 @@
          });
          
          $('#btnNewDocument').click(function() {
-                        // clearErrorMessages();
+                        clearErrorMessages();
                        trackingCode = generateTrackingCode();
                        $('#trackingCode').text(trackingCode);      
                        $('#trackingCode').css({'font-family': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif', 'font-size': '14px'});
