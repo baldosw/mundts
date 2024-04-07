@@ -27,10 +27,10 @@ public class Employee
 
     [Required]
     [StringLength(50, MinimumLength = 2, ErrorMessage = "The {0} value cannot exceed {1} characters and should not be less than {2} characters ")]
-    public string ContactNumberOne { get; set; }
+    public string ContactNumber { get; set; }
 
     [Required]
-    [EmailAddress]
+    [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Invalid email address")]
     [StringLength(100, MinimumLength = 2, ErrorMessage = "The {0} value cannot exceed {1} characters and should not be less than {2} characters ")]
     public string Email { get; set; }
 

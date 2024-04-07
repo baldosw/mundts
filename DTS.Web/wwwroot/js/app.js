@@ -290,15 +290,7 @@ function loadDocumentFromDatabase(urlFromClient){
 }
 
 function loadPrintDocument(urlFromClient){
-    //
-    //
-    // $('#printDocumentTrackingCode').text('');
-    // $('#printDocumentDepartmentName').text('');
-    // $('#printDocumentTitle').text('');
-    // $('#printDocumentContent').text('');
-    // $('#printDocumentRequestTypeTitle').text('');
-    // $('#printDocumentRemarks').text('');
-
+    
     $.ajax({
         url: urlFromClient,
         type: 'GET',
@@ -331,17 +323,23 @@ function loadPrintDocument(urlFromClient){
 //------------------- Get All Documents -------------------------------------
  
 var documentColumns = {
+    "processing": true,
+    "serverSide": true,
+    "deferLoading": 10, // Load 10 records initially
+    "paging": true, // Enable paging
+    "pagingType": "full_numbers",
+    filter: true,
     ajax: {
         url: '/user/document/getdocuments',
     },
     col: [
         { data: 'id' },
-        {data: 'department'},
-        { data: 'trackingCode' },
-        { data: 'title' },         
-        { data: 'content', className: 'truncate'  },
-        {data: 'requestType'},
-        {data: 'remarks'},
+        {data: 'department', width: '5%'},
+        { data: 'trackingCode', width: '5%' },
+        { data: 'title', width: '20%' },         
+        { data: 'content', width: '30%'  },
+        {data: 'requestType', width: '10%'},
+        {data: 'remarks', width: '30%'},
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',
@@ -377,6 +375,83 @@ var documentColumns = {
     
     'order': [[0, 'desc']]
 }
+
+ // --------------------- Get Documents By Page ---------------------------------
+ 
+var documentPageColumns = {
+    "processing": true,
+    "serverSide": true,
+    filter: true,
+    ajax: function ( data, callback, settings ) {
+
+        $.ajax({
+            url: 'http://localhost:64506/api/values',
+            // dataType: 'text',
+            type: 'post',
+            contentType: 'application/x-www-form-urlencoded',
+            data: {
+                RecordsStart: data.start,
+                PageSize: data.length
+            },
+            success: function( data, textStatus, jQxhr ){
+                callback({
+                    // draw: data.draw,
+                    data: data.Data,
+                    recordsTotal:  data.TotalRecords,
+                    recordsFiltered:  data.RecordsFiltered
+                });
+            },
+            error: function( jqXhr, textStatus, errorThrown ){
+            }
+        });
+    },     
+    col: [
+        { data: 'id' },
+        {data: 'department'},
+        { data: 'trackingCode' },
+        { data: 'title' },
+        { data: 'content', className: 'truncate'  },
+        {data: 'requestType'},
+        {data: 'remarks'},
+        {data:'createdTimestamp', visible: false},
+        {
+            data: 'id',
+            "render": function (data) {
+                return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >
+                                <a class="dropdown-item" href="#" onclick='loadDocumentFromDatabase("/user/document/getdocument/${data}")' style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
+                                <i class="bi bi-pencil-square" ></i>
+                                Update</a>
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-printer"></i>
+                                    Print
+                                </a>                          
+                            </div>                             
+                        </div>
+                    `;
+            }, width: "5%"
+        }
+    ],
+    colDefs: [
+        {
+            targets: [0], // index of the column you want to hide
+            visible: false, // hide the column
+            searchable: true // allow searching on this column
+        }
+    ],
+    'select': {
+        'style': 'multi'
+    },
+
+    'order': [[0, 'desc']],
+    
+}
+
+
+ // Load Data Tables
  
  function loadDataTable(ajaxColumns) {
     dataTable = $('#dataTable').DataTable({
@@ -387,7 +462,8 @@ var documentColumns = {
         "info": true,
         "autoWidth": true,
         "language": idioma,
-        "lengthMenu": [[5, 10, 20, -1], [5, 10, 50, "Display All"]],
+        // "lengthMenu": [[5, 10, 20, -1], [5, 10, 50, "Display All"]],
+        // lengthMenu: [],
         dom: 'Bfrt<"col-md-6 inline"i> <"col-md-6 inline"p>',
         ajax: ajaxColumns.ajax.url,
         columns: ajaxColumns.col,

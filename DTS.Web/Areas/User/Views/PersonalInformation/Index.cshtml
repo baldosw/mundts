@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model PersonalInformationVm
+
+@{
+    ViewData["Title"] = "Personal Information";
+    Layout = "_Layout";
+}
+ 
+<div class="card">
+    <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-12">
+                    <form class="row g-3" method="post" asp-area="User" asp-controller="PersonalInformation" asp-action="UpdatePersonalInformation">
+                        <input type="hidden" class="form-control" asp-for="Employee.Id">
+                        <div class="col-md-6">
+                            <label asp-for="Employee.FirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" asp-for="Employee.FirstName">
+                            <span asp-validation-for="Employee.FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.MiddleName" class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" asp-for="Employee.MiddleName">
+                            <span asp-validation-for="Employee.MiddleName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.LastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" asp-for="Employee.LastName">
+                            <span asp-validation-for="Employee.LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.Position" class="form-label">Position</label>
+                            <input type="text" class="form-control" asp-for="Employee.Position">
+                            <span asp-validation-for="Employee.Position" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.ContactNumber" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" asp-for="Employee.ContactNumber">
+                            <span asp-validation-for="Employee.ContactNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.Email" class="form-label">Email</label>
+                            <input type="text" class="form-control" asp-for="Employee.Email">
+                            <span asp-validation-for="Employee.Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.Address" class="form-label">Address</label>
+                            <input type="text" class="form-control" asp-for="Employee.Address">
+                            <span asp-validation-for="Employee.Address" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Employee.DepartmentId" class="form-label">Department</label>
+                            <select class="form-select" asp-for="Employee.DepartmentId" asp-items="@Model.Departments">
+                                <option value="">----------Select Department---------</option>
+                            </select>
+                            <span asp-validation-for="Employee.DepartmentId" class="text-danger small"></span>
+                        </div>
+                        <div class="text-center mt-5">
+                            <a class="btn btn-secondary" asp-area="User" asp-controller="Document" asp-action="Index">Back</a>
+                            <button type="submit" class="btn btn-primary"  >Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

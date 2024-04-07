@@ -1508,12 +1508,12 @@ div.dataTables_wrapper div.dataTables_filter {
   font-weight: 600;
 }
 
-textarea{
-  font-size: 10px !important;
+.modal textarea{
+  font-size: 12px !important;
   height: 200px !important;
 }
 
-.form-select, .form-select option {
+.modal .form-select, .modal .form-select option {
   font-size: 10px !important;
  
 }
@@ -1548,7 +1548,11 @@ textarea{
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 50px !important;  
-} 
+}
+
+.buttons-page-length {
+  display: none !important;
+}
 
 
 /* Print Document Style */
@@ -1566,7 +1570,7 @@ textarea{
   }
 
   .modal {
-    margin-top: -30rem;
+ 
     position: static; /* Remove fixed positioning */
     width: auto; /* Auto width for printing */
     height: auto; /* Auto height for printing */

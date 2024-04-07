@@ -1,4 +1,5 @@
 ﻿using DTS.Common;
+using DTS.Common.DataTables;
 using DTS.DataAccess;
 using DTS.Models;
 using DTS.Web.Areas.User.ViewModels;
@@ -107,6 +108,49 @@ public class DocumentController : Controller
         
         var dataJson = new { data = documentFromDb };
         return Ok(dataJson);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult>  GetDocumentsPage(DataTablesParameters parameters)
+    {
+        // Total count of documents
+        var totalCount = await _dbContext.Documents.CountAsync();
+
+        // Query for documents with join
+        var query = from document in _dbContext.Documents
+                    join department in _dbContext.Departments.AsNoTracking()
+                        on document.DepartmentId equals department.Id
+                    join requestType in _dbContext.RequestTypes.AsNoTracking()
+                        on document.RequestTypeId equals requestType.Id
+                    orderby document.Id descending
+                    select new DocumentVm
+                    {
+                        Id = document.Id,
+                        Title = document.Title,
+                        Content = document.Content,
+                        TrackingCode = document.TrackingCode,
+                        Remarks = document.Remarks,
+                        RequestType = requestType.Title,
+                        Department = department.Name,
+                        DocumentId = document.Id,
+                        RequestTypeId = document.DepartmentId,
+                        DepartmentId = document.DepartmentId,
+                        CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
+                    };
+
+        // Apply paging
+        var documents = await query.Skip(parameters.Start).Take(parameters.Length).ToListAsync();
+
+        var dataJson = new
+        {
+            draw = parameters.Draw,
+            recordsTotal = totalCount,
+            recordsFiltered = totalCount, // We're not applying filtering in this example
+            data = documents
+        };
+
+        return Ok(dataJson);
+    
     }
  
     [HttpPost]

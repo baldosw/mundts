@@ -114,7 +114,7 @@ namespace DTS.DataAccess.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("nvarchar(400)");
 
-                    b.Property<string>("ContactNumberOne")
+                    b.Property<string>("ContactNumber")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
