@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DTS.Web.Controllers;
 
+[Area("User")]
 public class PersonalInformationController : Controller
 {
     private readonly ApplicationDbContext _dbContext;

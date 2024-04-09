@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DTS.Web.Controllers;
 
+[Area("User")]
 public class DocumentController : Controller
 {
     private readonly ApplicationDbContext _dbContext;

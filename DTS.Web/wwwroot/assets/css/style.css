@@ -1587,3 +1587,19 @@ div.dataTables_wrapper div.dataTables_filter {
     display: none; /* Hide title and footer */
   }
 }
+
+#main.identity{
+  justify-self: center;
+  width: 35% !important;
+  margin-left: 0!important;
+  padding-bottom: 3rem !important;
+  display: inline-block;
+}
+
+.auth > *, .auth input{
+  font-size: 12px !important;
+}
+
+.auth{
+  padding-top: 1rem;   
+ }
