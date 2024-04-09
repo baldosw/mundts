@@ -1,0 +1,90 @@
+﻿@page
+@model RegisterModel
+ 
+<div class="card auth">
+    <div class="card-body">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12">
+                <section>
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <h6 style="font-weight: 600">Create a new account</h6>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">Email</label>
+                            <input asp-for="Input.Email" class="form-control"  aria-required="true" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Input.Password">Password</label>
+                            <input asp-for="Input.Password" class="form-control"  aria-required="true"  />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control"   aria-required="true"  />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">FirstName</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">MiddleName</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">LastName</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">Position</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">ContactNumber</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">Address</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">Address</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Email">Department</label>
+                            <select name="" id="" class="form-select" style="font-size: 12px">
+                                <option value="">--------Select Department----------</option>
+                            </select>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <button id="registerSubmit" type="submit" class="w-100 btn btn-primary mt-3">Register</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+      const quill = new Quill('#editor', {
+        theme: 'snow'
+      });
+    </script>
+    
+        
+}
+
+ 

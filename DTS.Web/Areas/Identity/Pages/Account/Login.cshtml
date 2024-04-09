@@ -1,0 +1,66 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+  
+<div class="card auth">
+    <div class="card-body">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12">
+                <section>
+                    <form id="account" method="post">
+                        <h6 style="font-weight: 600">
+                            Login
+                        </h6>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" >Email</label>
+                            <input asp-for="Input.Email" class="form-control" aria-required="true"/>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" >Password</label>
+                            <input asp-for="Input.Password" class="form-control" aria-required="true"/>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="checkbox mb-3 d-flex justify-content-end">
+                            <label asp-for="Input.RememberMe" class="form-label">
+                                <input class="form-check-input" asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                            </label>
+                        </div>
+                        <div>
+                            <button id="login-submit" type="submit" class="w-100 btn btn-primary">Log in</button>
+                        </div>
+                        <div class="d-flex flex-column align-items-end mt-2">
+                            <div class="mb-2">
+                                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                            </div>
+                            <div>
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+             
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+      const quill = new Quill('#editor', {
+        theme: 'snow'
+      });
+    </script>
+    
+        
+}
+
+ 
