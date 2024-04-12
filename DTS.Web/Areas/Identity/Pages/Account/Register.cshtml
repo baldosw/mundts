@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/register"
 @model RegisterModel
  
 <div class="card auth">
@@ -26,43 +26,38 @@
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Email">FirstName</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <label asp-for="Input.FirstName">FirstName</label>
+                            <input asp-for="Input.FirstName" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Email">MiddleName</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <label asp-for="Input.MiddleName">MiddleName</label>
+                            <input asp-for="Input.MiddleName" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Email">LastName</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <label asp-for="Input.LastName">LastName</label>
+                            <input asp-for="Input.LastName" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.LastName" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Email">Position</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <label asp-for="Input.Position">Position</label>
+                            <input asp-for="Input.Position" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Position" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Email">ContactNumber</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <label asp-for="Input.ContactNumber">ContactNumber</label>
+                            <input asp-for="Input.ContactNumber" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.ContactNumber" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Email">Address</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        </div>
-                        <div class="  mb-3">
-                            <label asp-for="Input.Email">Address</label>
-                            <input asp-for="Input.Email" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <label asp-for="Input.Address">Address</label>
+                            <input asp-for="Input.Address" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Address" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
                             <label asp-for="Input.Email">Department</label>
-                            <select name="" id="" class="form-select" style="font-size: 12px">
+                            <select asp-for = "Input.DepartmentId" asp-items="Model.InputDepartments" class="form-select" style="font-size: 12px">
                                 <option value="">--------Select Department----------</option>
                             </select>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>

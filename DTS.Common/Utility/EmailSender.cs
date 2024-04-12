@@ -1,4 +1,7 @@
-﻿namespace DTS.Common.Utility;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
+namespace DTS.Common.Utility;
 
 public class EmailSender : IEmailSender
 {
