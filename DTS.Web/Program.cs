@@ -1,3 +1,5 @@
+using System.Configuration;
+using DTS.Common;
 using DTS.Common.Utility;
 using DTS.DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -25,16 +27,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"))); 
 
 // builder.Services.AddDefaultIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedEmail = true; // Require email confirmation
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddTokenProvider("Default", typeof(EmailTwoFactorAuthentication<IdentityUser>));
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     
     options.LoginPath = $"/";
     options.LogoutPath = $"/Account/Logout";
-    options.AccessDeniedPath = $"/Account/AccessDenied";
+    options.AccessDeniedPath = $"/AccessDenied";
 });
 
+ 
+ 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+
 
 var app = builder.Build();
  

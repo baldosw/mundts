@@ -41,11 +41,6 @@
                             <span asp-validation-for="Input.LastName" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
-                            <label asp-for="Input.Position">Position</label>
-                            <input asp-for="Input.Position" class="form-control" aria-required="true"  />
-                            <span asp-validation-for="Input.Position" class="text-danger"></span>
-                        </div>
-                        <div class="  mb-3">
                             <label asp-for="Input.ContactNumber">ContactNumber</label>
                             <input asp-for="Input.ContactNumber" class="form-control" aria-required="true"  />
                             <span asp-validation-for="Input.ContactNumber" class="text-danger"></span>
@@ -54,6 +49,11 @@
                             <label asp-for="Input.Address">Address</label>
                             <input asp-for="Input.Address" class="form-control" aria-required="true"  />
                             <span asp-validation-for="Input.Address" class="text-danger"></span>
+                        </div>
+                        <div class="  mb-3">
+                            <label asp-for="Input.Position">Position</label>
+                            <input asp-for="Input.Position" class="form-control" aria-required="true"  />
+                            <span asp-validation-for="Input.Position" class="text-danger"></span>
                         </div>
                         <div class="  mb-3">
                             <label asp-for="Input.Email">Department</label>
@@ -69,17 +69,4 @@
         </div>
     </div>
 </div>
-
-
-@section Scripts
-{
-    <script type="text/javascript">
-      const quill = new Quill('#editor', {
-        theme: 'snow'
-      });
-    </script>
-    
-        
-}
-
  

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTS.DataAccess", "DTS.DataA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTS.Common", "DTS.Common\DTS.Common.csproj", "{168128E9-4C43-4A9D-9230-DD6BB58BCE7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTS.Services", "DTS.Services\DTS.Services.csproj", "{C00DDBCE-CD14-4ABC-B714-73CA70439AEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{168128E9-4C43-4A9D-9230-DD6BB58BCE7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{168128E9-4C43-4A9D-9230-DD6BB58BCE7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{168128E9-4C43-4A9D-9230-DD6BB58BCE7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C00DDBCE-CD14-4ABC-B714-73CA70439AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C00DDBCE-CD14-4ABC-B714-73CA70439AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C00DDBCE-CD14-4ABC-B714-73CA70439AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C00DDBCE-CD14-4ABC-B714-73CA70439AEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

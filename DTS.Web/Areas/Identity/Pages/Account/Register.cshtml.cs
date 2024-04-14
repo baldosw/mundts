@@ -167,6 +167,15 @@ namespace DTS.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            InputDepartments = await _dbContext.Departments
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = d.Name
+                })
+                .ToListAsync();
+            
+            
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -175,42 +184,40 @@ namespace DTS.Web.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                
-                
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                
+                var userId = await _userManager.GetUserIdAsync(user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                Employee employee = new Employee();
+                employee.FirstName = Input.FirstName;
+                employee.MiddleName = Input.MiddleName;
+                employee.LastName = Input.LastName;
+                employee.Address = Input.Address;
+                employee.ContactNumber = Input.ContactNumber;
+                employee.Position = Input.Position;
+                employee.Email = Input.Email;
+                employee.DepartmentId = Input.DepartmentId;
+
+                await _dbContext.Employees.AddAsync(employee);
+                await _dbContext.SaveChangesAsync();
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    Employee employee = new Employee();
-                    employee.FirstName = Input.FirstName;
-                    employee.MiddleName = Input.MiddleName;
-                    employee.LastName = Input.LastName;
-                    employee.Address = Input.Address;
-                    employee.ContactNumber = Input.ContactNumber;
-                    employee.Position = Input.Position;
-                    employee.Email = Input.Email;
-                    employee.DepartmentId = Input.DepartmentId;
-
-                    await _dbContext.Employees.AddAsync(employee);
-                    await _dbContext.SaveChangesAsync();
                      
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                        values: new {  userId = userId, code = code, returnUrl = returnUrl },
+                        protocol: Request.Scheme,
+                        pageName: "ConfirmEmail");
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    _userManager.Options.SignIn.RequireConfirmedAccount = true;
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return Redirect($"/registerconfirmation?email={Input.Email}&returnUrl={returnUrl}");
                     }
                     else
                     {
