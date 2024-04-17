@@ -246,6 +246,7 @@ public class DocumentController : Controller
                 document.DepartmentId = documentVm.DepartmentId.Value;
                 document.RequestTypeId = documentVm.RequestTypeId.Value;
                 document.Remarks = documentVm.Remarks;
+                document.RouteDepartmentId = documentVm.RouteDepartmentId;
             
                 _dbContext.Documents.Update(document);
                 await _dbContext.SaveChangesAsync();

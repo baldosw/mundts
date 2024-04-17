@@ -396,6 +396,9 @@
                                         let content =  $('#updateContent').val();
                                         let remarks =  $('#updateRemarks').val();
                                          let trackingCode =  $('#updateTrackingCode').text();
+                                          let routeDepartmentId =  $('#updateRouteDepartmentId').val();
+                                         
+                                         
                                            let data = {
                                                                              departmentId,
                                                                              requestTypeId,
@@ -403,7 +406,8 @@
                                                                              content,
                                                                              remarks,
                                                                              trackingCode,
-                                                                             id : documentId
+                                                                             id : documentId,
+                                                                             routeDepartmentId
                                                                               
                                                                          }       
                                                                          
