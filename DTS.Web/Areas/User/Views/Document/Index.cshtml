@@ -76,6 +76,13 @@
                         <p class="errorFieldText" id = 'errorFieldRequestTypeId' data-errorfield = "requestTypeId"></p>
                     </div>
                     <div class="form-group">
+                        <label for="message-text" class="col-form-label">Routing Department:</label>
+                        <select id="routeDepartmentId" asp-for="@Model.RouteDepartmentId" asp-items="@Model.Departments" class="form-select" style="font-size: 12px !important;">
+                            <option value="">----Select Routing Department----</option>
+                        </select>
+                        <p class="errorFieldText" id = 'errorFieldRouteDepartmentId' data-errorfield = "routeDepartmentId"></p>
+                    </div>
+                    <div class="form-group">
                         <label for="message-text" class="col-form-label">Remarks:</label>
                         <textarea cols="30" rows="2" class="form-control" style="height: 50px;" id ="remarks"></textarea>
                     </div>
@@ -127,6 +134,13 @@
                       <option value="">----Select Request Type----</option>
                   </select>
                   <p class="errorFieldText" id='errorUpdateFieldRequestTypeId' data-errorfield="requestTypeId"></p>
+              </div>
+              <div class="form-group">
+                  <label for="message-text" class="col-form-label">Routing Department:</label>
+                  <select id="updateRouteDepartmentId" asp-for="@Model.DepartmentId" asp-items="@Model.Departments" class="departmentId form-select" style="font-size: 12px !important;">
+                      <option value="">----Select Routing Department----</option>
+                  </select>
+                  <p class="errorFieldText" id='errorUpdateFieldRouteDepartmentId' data-errorfield="routeDepartmentId"></p>
               </div>
               <div class="form-group">
                   <label for="message-text" class="col-form-label">Remarks:</label>
@@ -230,6 +244,7 @@
                           let validateTitle = validateInput('Title', inputObject.title, 2, 50);
                           let validateContent = validateInput('Content', inputObject.content, 2, 400);
                           let validateDepartment = validateSelect('Department', inputObject.departmentId);
+                          let validateRouteDepartmentId = validateSelect('Routing Department', inputObject.routeDepartmentId);
                           let validateRequestTypeid = validateSelect('Request Type', inputObject.requestTypeId);
                          
                           $('.errorFieldText').text('')
@@ -238,11 +253,13 @@
                           displayValidationError('#errorFieldContent', validateContent)
                           displayValidationError('#errorFieldDepartmentId', validateDepartment)
                           displayValidationError('#errorFieldRequestTypeId', validateRequestTypeid)
+                           displayValidationError('#errorFieldRouteDepartmentId', validateRouteDepartmentId)
 
                            displayValidationError('#errorUpdateFieldTitle', validateTitle)
                             displayValidationError('#errorUpdateFieldContent', validateContent)
                             displayValidationError('#errorUpdateFieldDepartmentId', validateDepartment)
                             displayValidationError('#errorUpdateFieldRequestTypeId', validateRequestTypeid)
+                           displayValidationError('#errorUpdateFieldRouteDepartmentId', validateRouteDepartmentId)
                            
                           if (clientErrors.length < 1){                  
                               $.ajax({
@@ -352,6 +369,7 @@
                                   let title =  $('#title').val();
                                   let content =  $('#content').val();
                                   let remarks =  $('#remarks').val();
+                                  let routeDepartmentId = $('#routeDepartmentId').val();
                                                           
                                   
                            let data = {
@@ -360,8 +378,8 @@
                                    title,
                                    content,
                                    remarks,
-                                   trackingCode
-                                    
+                                   trackingCode,
+                                   routeDepartmentId                                    
                                }                          
                                                           
                                saveChanges(data, 'post', '/user/document/createDocument', 'New Document',  'Successfully created document');

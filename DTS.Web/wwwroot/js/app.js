@@ -376,6 +376,64 @@ var documentColumns = {
     'order': [[0, 'desc']]
 }
 
+
+//--------------------- Outgoing Documents-----------------------------
+
+
+var outgoingDocumentColumns = {
+    "processing": true,
+    "serverSide": true,
+    "deferLoading": 10, // Load 10 records initially
+    "paging": true, // Enable paging
+    "pagingType": "full_numbers",
+    filter: true,
+    ajax: {
+        url: '/user/document/getdocuments',
+    },
+    col: [
+        { data: 'id' },
+        {data: 'department', width: '5%'},
+        { data: 'trackingCode', width: '5%' },
+        { data: 'title', width: '20%' },
+        { data: 'content', width: '30%'  },
+        {data: 'requestType', width: '10%'},
+        {data: 'remarks', width: '30%'},
+        {data:'createdTimestamp', visible: false},
+        {
+            data: 'id',
+            "render": function (data) {
+                return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >
+                                <a class="dropdown-item" href="#" onclick='loadDocumentFromDatabase("/user/document/getdocument/${data}")' style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
+                                <i class="bi bi-pencil-square" ></i>
+                                Update</a>
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-printer"></i>
+                                    Print
+                                </a>                          
+                            </div>                             
+                        </div>
+                    `;
+            }, width: "5%"
+        }
+    ],
+    colDefs: [
+        {
+            targets: [0], // index of the column you want to hide
+            visible: false, // hide the column
+            searchable: true // allow searching on this column
+        }
+    ],
+    'select': {
+        'style': 'multi'
+    },
+
+    'order': [[0, 'desc']]
+}
+
  // --------------------- Get Documents By Page ---------------------------------
  
 var documentPageColumns = {

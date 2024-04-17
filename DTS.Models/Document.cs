@@ -38,7 +38,16 @@ public class Document
     [ValidateNever]
     public Department? Department { get; set; }
     
+    //The source of the document
     public int? DepartmentId { get; set; }
+
+    //Department to the forwarded department
+    public int? RouteDepartmentId { get; set; }
+
+    public int? StatusId { get; set; }
+
+    [ValidateNever]
+    public Status Status { get; set; }
      
     public DateTime CreatedDate { get; set; }
 

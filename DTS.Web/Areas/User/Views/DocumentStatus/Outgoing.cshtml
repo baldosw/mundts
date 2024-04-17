@@ -1,0 +1,38 @@
+﻿ 
+@{
+    ViewData["Title"] = "Outgoing";
+}
+
+<div class="card">
+    <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="selectionTable table table-striped table-bordered" style="width:100%" id="dataTable">
+                    <thead>
+                    <tr class="bg-dark text-white ps-2">
+                    <th class="ps-3">Id</th>
+                    <th class="ps-3">Department</th>
+                    <th class="ps-3">TrackingCode</th>
+                    <th class="ps-3">Title</th>
+                    <th class="ps-3">Content</th>
+                    <th class="ps-3">Request Type</th>
+                    <th class="ps-3">Remarks</th>
+                    <th class="ps-3">CreatedDate</th>
+                    <th class="ps-3">Action</th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="custom-buttons">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#modalNewDocument" id = "btnNewDocument">
+                <i class="bi bi-file-earmark-plus"></i>
+                New Document
+            </button>
+            <button class="btn btn-success" id = "btnRefreshDataTable">
+                <i class="bi bi-arrow-repeat"></i>
+                Refresh
+            </button>
+        </div>
+    </div>
+</div>
