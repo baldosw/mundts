@@ -10,19 +10,21 @@ var dataTable;
 
 var qrCodeDiv = document.getElementById('qrcode');
 
- 
-var qrCode = new QRCode(qrCodeDiv, {
-    text: '',  
-    width: 128,
-    height: 128
-});
+var qrCode;
 
+if(qrCodeDiv !== null  && qrCodeDiv !== 'undefined'){
+    qrCode = new QRCode(qrCodeDiv, {
+        text: '',
+        width: 128,
+        height: 128
+    });
+}
+ 
 function updateQRCode(content) {
     qrCode.clear();  
     qrCode.makeCode(content);  
 }
-
-
+ 
 var idioma =
 {
     "sProcessing": "Processing...",
@@ -276,6 +278,7 @@ function loadDocumentFromDatabase(urlFromClient){
                     $('#updateRequestTypeId').val(response.data.requestTypeId);
                     $('#updateTrackingCode').text(response.data.trackingCode);
                     $('#updateId').val(response.data.id);
+                    $('#updateRouteDepartmentId').val(response.data.routeDepartmentId)
                     $('#modalUpdateDocument').modal('show');
                 } else {
                     console.error('Title not found in the response.');
@@ -286,6 +289,24 @@ function loadDocumentFromDatabase(urlFromClient){
                 console.error(xhr.responseText);
             }
         });
+    });
+}
+
+ 
+function loadIncomingData(urlFromClient){
+    $.ajax({
+        url: urlFromClient,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response && response.data && response.data.title) {
+                $('#documentId').val(response.data.id);
+            }
+        },
+        error: function(xhr, status, error) {
+
+             
+        }
     });
 }
 
@@ -343,8 +364,24 @@ var documentColumns = {
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',
-            "render": function (data) {
-                return `
+            "render": function (data, type, row) {
+                
+                if(row.statusId === 2 || row.statusId === 4)
+                {
+                    return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >                                 
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-printer"></i>
+                                    Print
+                                </a>                          
+                            </div>                             
+                        </div>
+                    `;
+                }else{
+                    return `
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
                             </a>
@@ -359,6 +396,9 @@ var documentColumns = {
                             </div>                             
                         </div>
                     `;
+                }
+                
+                
             }, width: "5%"
         }
     ],
@@ -378,8 +418,7 @@ var documentColumns = {
 
 
 //--------------------- Outgoing Documents-----------------------------
-
-
+ 
 var outgoingDocumentColumns = {
     "processing": true,
     "serverSide": true,
@@ -388,7 +427,7 @@ var outgoingDocumentColumns = {
     "pagingType": "full_numbers",
     filter: true,
     ajax: {
-        url: '/user/document/getdocuments',
+        url: '/user/documentstatus/getoutgoingdocuments',
     },
     col: [
         { data: 'id' },
@@ -406,14 +445,69 @@ var outgoingDocumentColumns = {
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
                             </a>
-                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >
-                                <a class="dropdown-item" href="#" onclick='loadDocumentFromDatabase("/user/document/getdocument/${data}")' style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
-                                <i class="bi bi-pencil-square" ></i>
-                                Update</a>
-                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
-                                   <i class="bi bi-printer"></i>
-                                    Print
-                                </a>                          
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >                                
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" data-toggle="modal" data-target="#cancelModal" onclick='loadIncomingData("/user/document/getdocument/${data}")'  >
+                                   <i class="bi bi-check"></i>
+                                   Cancel
+                                </a>                                                            
+                            </div>                             
+                        </div>
+                    `;
+            }, width: "5%"
+        }
+    ],
+    colDefs: [
+        {
+            targets: [0], // index of the column you want to hide
+            visible: false, // hide the column
+            searchable: true // allow searching on this column
+        }
+    ],
+    'select': {
+        'style': 'multi'
+    },
+
+    'order': [[0, 'desc']]
+}
+
+
+//--------------------- Incoming Documents-----------------------------
+
+var incomingDocumentColumns = {
+    "processing": true,
+    "serverSide": true,
+    "deferLoading": 10, // Load 10 records initially
+    "paging": true, // Enable paging
+    "pagingType": "full_numbers",
+    filter: true,
+    ajax: {
+        url: '/user/documentstatus/getincomingdocuments',
+    },
+    col: [
+        { data: 'id' },
+        {data: 'department', width: '5%'},
+        { data: 'trackingCode', width: '5%' },
+        { data: 'title', width: '20%' },
+        { data: 'content', width: '30%'  },
+        {data: 'requestType', width: '10%'},
+        {data: 'remarks', width: '30%'},
+        {data:'createdTimestamp', visible: false},
+        {
+            data: 'id',
+            "render": function (data) {
+                return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >                                
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" data-toggle="modal" data-target="#receiveModal" onclick='loadIncomingData("/user/document/getdocument/${data}")'  >
+                                   <i class="bi bi-check"></i>
+                                   Receive
+                                </a>    
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;"  >
+                                   <i class="bi bi-eye"></i>
+                                   Details
+                                </a>                        
                             </div>                             
                         </div>
                     `;

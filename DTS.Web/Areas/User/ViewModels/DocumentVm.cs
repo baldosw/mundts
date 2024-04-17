@@ -54,5 +54,7 @@ public class DocumentVm
     public string RequestTypeTitle { get; set; }
 
     public int? RouteDepartmentId { get; set; }
+
+    public int StatusId { get; set; }
  
 }

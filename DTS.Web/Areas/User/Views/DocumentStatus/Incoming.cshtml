@@ -1,0 +1,84 @@
+﻿ 
+@{
+    ViewData["Title"] = "Incoming";
+}
+
+
+
+<div class="card">
+    <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="selectionTable table table-striped table-bordered" style="width:100%" id="dataTable">
+                    <thead>
+                    <tr class="bg-dark text-white ps-2">
+                    <th class="ps-3">Id</th>
+                    <th class="ps-3">Department</th>
+                    <th class="ps-3">TrackingCode</th>
+                    <th class="ps-3">Title</th>
+                    <th class="ps-3">Content</th>
+                    <th class="ps-3">Request Type</th>
+                    <th class="ps-3">Remarks</th>
+                    <th class="ps-3">CreatedDate</th>
+                    <th class="ps-3">Action</th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="receiveModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Receive Document</h5>
+      </div>
+      <div class="modal-body">
+          <p>Would you like to receive the document?</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="btnReceiveDocument">Receive</button>
+          <input type="hidden" id = "documentId" >
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden"  id = "employeeId" value="@ViewData["employeeId"]" >
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            loadDataTable(incomingDocumentColumns)
+            
+            $('#btnReceiveDocument').click(function (){
+                let employeeId = $('#employeeId').val();
+                let documentId = $('#documentId').val();
+                
+                  $.ajax({
+                          url: '/user/documentstatus/updatedocumenttoreceive',
+                          type: 'PUT',
+                           contentType: 'application/json', 
+                           data: JSON.stringify({
+                                employeeId,
+                                documentId
+                           }),
+                          success: function(response) {
+                              if (response && response.data ) {
+                                 console.log(response)
+                              }
+                          },
+                          error: function(xhr, status, error) {
+                  
+                               
+                          }
+                      });
+                })
+            
+        })
+        
+    </script>
+
+}

@@ -1,8 +1,10 @@
-﻿using DTS.Common;
+﻿using System.Security.Claims;
+using DTS.Common;
 using DTS.Common.DataTables;
 using DTS.DataAccess;
 using DTS.Models;
 using DTS.Web.Areas.User.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +12,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DTS.Web.Controllers;
 
 [Area("User")]
+[Authorize]
 public class DocumentController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
-    public DocumentController(ApplicationDbContext dbContext)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public DocumentController(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<IActionResult> Index()
@@ -56,11 +62,15 @@ public class DocumentController : Controller
     [HttpGet]
     public async Task<IActionResult>  GetDocuments()
     {
+        string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var employee = await _dbContext.Employees.Where(e => e.UserId == userId).FirstOrDefaultAsync();
+        
         var documents = await (from document in _dbContext.Documents
             join department in _dbContext.Departments.AsNoTracking()
                 on document.DepartmentId equals department.Id
             join requestType in _dbContext.RequestTypes.AsNoTracking()
                 on document.RequestTypeId equals requestType.Id
+                where document.CreatedBy == employee.Id
             orderby document.Id descending 
             select new DocumentVm
             {
@@ -74,6 +84,7 @@ public class DocumentController : Controller
                 DocumentId = document.Id,
                 RequestTypeId = document.DepartmentId,
                 DepartmentId = document.DepartmentId,
+                StatusId = document.StatusId.Value,
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();
         
@@ -104,6 +115,8 @@ public class DocumentController : Controller
                 DepartmentId = department.Id,
                 DepartmentName = department.Name,
                 RequestTypeTitle = requestType.Title,
+                RouteDepartmentId = document.RouteDepartmentId,
+                StatusId = document.StatusId.Value,
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).SingleOrDefaultAsync();
         
@@ -162,9 +175,7 @@ public class DocumentController : Controller
             Document document = new Document();
             document.CreatedDate = DateTime.Now;
             document.ModifiedDate = DateTime.Now;
-            document.CreatedBy = 3;
-            document.ModifiedBy = 3;
-
+      
             if (documentVm.DepartmentId is null)
             {
                 ModelState.AddModelError("DepartmentId", "Department is required");
@@ -177,6 +188,9 @@ public class DocumentController : Controller
         
             if (ModelState.IsValid)
             {
+                string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var employee = await _dbContext.Employees.Where(e => e.UserId == userId).FirstOrDefaultAsync();
+                
                 document.Title = documentVm.Title;
                 document.Content = documentVm.Content;
                 document.TrackingCode = documentVm.TrackingCode;
@@ -184,6 +198,8 @@ public class DocumentController : Controller
                 document.RequestTypeId = documentVm.RequestTypeId.Value;
                 document.Remarks = documentVm.Remarks;
                 document.RouteDepartmentId = documentVm.RouteDepartmentId;
+                document.CreatedBy = employee.Id;
+                document.ModifiedBy = employee.Id;
                 
                 //Status Id for forwarded is 1
                 document.StatusId = (int)StatusEnum.Forwarded;;
@@ -225,9 +241,7 @@ public class DocumentController : Controller
         {
             Document document = await _dbContext.Documents.Where(doc => doc.Id == documentVm.Id).FirstOrDefaultAsync();
             document.ModifiedDate = DateTime.Now;
-            document.CreatedBy = 3;
-            document.ModifiedBy = 3;
-
+             
             if (documentVm.DepartmentId is null)
             {
                 ModelState.AddModelError("DepartmentId", "Department is required");
@@ -240,6 +254,9 @@ public class DocumentController : Controller
         
             if (ModelState.IsValid)
             {
+                string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var employee = await _dbContext.Employees.Where(e => e.UserId == userId).FirstOrDefaultAsync();
+                
                 document.Title = documentVm.Title;
                 document.Content = documentVm.Content;
                 document.TrackingCode = documentVm.TrackingCode;
@@ -247,6 +264,7 @@ public class DocumentController : Controller
                 document.RequestTypeId = documentVm.RequestTypeId.Value;
                 document.Remarks = documentVm.Remarks;
                 document.RouteDepartmentId = documentVm.RouteDepartmentId;
+                document.ModifiedBy = employee.Id;
             
                 _dbContext.Documents.Update(document);
                 await _dbContext.SaveChangesAsync();

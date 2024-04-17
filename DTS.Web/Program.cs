@@ -2,6 +2,7 @@ using System.Configuration;
 using DTS.Common;
 using DTS.Common.Utility;
 using DTS.DataAccess;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -34,6 +35,16 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddTokenProvider("Default", typeof(EmailTwoFactorAuthentication<IdentityUser>));
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        // Configure cookie options if needed
+        options.Cookie.HttpOnly = true;
+        // Other configuration options...
+    });
+
+builder.Services.AddHttpContextAccessor();
+ 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     

@@ -19,20 +19,42 @@
                     <th class="ps-3">Request Type</th>
                     <th class="ps-3">Remarks</th>
                     <th class="ps-3">CreatedDate</th>
-                    <th class="ps-3">Action</th>
+                     <th class="ps-3">Action</th>
                     </thead>
                 </table>
             </div>
         </div>
-        <div class="custom-buttons">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#modalNewDocument" id = "btnNewDocument">
-                <i class="bi bi-file-earmark-plus"></i>
-                New Document
-            </button>
-            <button class="btn btn-success" id = "btnRefreshDataTable">
-                <i class="bi bi-arrow-repeat"></i>
-                Refresh
-            </button>
+    </div>
+</div>
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cancel Forwarding</h5>
+            </div>
+            <div class="modal-body">
+                <p>Would you like to cancel forwarding the document?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnCancel">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
+<input type="hidden"  id = "employeeId" value="@ViewData["employeeId"]" >
+<input type="hidden" id = "documentId" >
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            loadDataTable(outgoingDocumentColumns)
+        })
+        
+        $('#btnCancel').click(function (){
+             alert('cancel')
+        })
+        
+    </script>
+
+}

@@ -1563,19 +1563,18 @@ div.dataTables_wrapper div.dataTables_filter {
 
   body * {
     visibility: hidden; /* Hide all elements */
+    position: relative;
+  }
+  
+  .modal{
+    position: absolute;
+    top: 0 !important;
   }
 
-  .modal, .modal * {
+  .modal, .modal * {     
     visibility: visible; /* Show the modal and its contents */
   }
-
-  .modal {
  
-    position: static; /* Remove fixed positioning */
-    width: auto; /* Auto width for printing */
-    height: auto; /* Auto height for printing */
-  }
-
   .modal-content {
     margin: 0; /* Reset margin */
     border: none; /* Remove border */

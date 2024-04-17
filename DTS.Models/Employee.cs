@@ -43,6 +43,8 @@ public class Employee
 
     [Required]
     public int DepartmentId { get; set; }
- 
-    
+
+    //User id is obtained on identity
+    public string? UserId { get; set; }
+  
 }

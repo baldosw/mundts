@@ -197,6 +197,7 @@ namespace DTS.Web.Areas.Identity.Pages.Account
                 employee.Position = Input.Position;
                 employee.Email = Input.Email;
                 employee.DepartmentId = Input.DepartmentId;
+                employee.UserId = user.Id;
 
                 await _dbContext.Employees.AddAsync(employee);
                 await _dbContext.SaveChangesAsync();

@@ -28,7 +28,7 @@ public class EmailSender : IEmailSender
 
         var mailMessage = new MailMessage
         {
-            From = new MailAddress("baldoswill@gmail.com", "William"),
+            From = new MailAddress("baldoswill@gmail.com", "DTS System"),
             Subject = subject,
             Body = message,
             IsBodyHtml = true,
@@ -39,11 +39,10 @@ public class EmailSender : IEmailSender
         try
         {
             await smtpClient.SendMailAsync(mailMessage);
-            Console.WriteLine("Email sent successfully!");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to send email: {ex.Message}");
+            //TODO: Logger
         }
     }
 }
