@@ -48,28 +48,29 @@ public class DocumentStatusController : Controller
 
         var documents = await (from document in _dbContext.Documents
                 join department in _dbContext.Departments.AsNoTracking()
-                    on document.DepartmentId equals department.Id
+                    on document.DepartmentId equals department.Id // Corrected this line
                 join requestType in _dbContext.RequestTypes.AsNoTracking()
                     on document.RequestTypeId equals requestType.Id
-            where document.CreatedBy == employee.Id && document.StatusId == (int)StatusEnum.Forwarded
-                                                    && document.StatusId != (int)StatusEnum.Received
+                where document.CreatedBy == employee.Id 
+                      && document.StatusId == (int)StatusEnum.Forwarded 
+                      && document.StatusId != (int)StatusEnum.Received 
+                      && document.DepartmentId == employee.DepartmentId // Added this line
                 orderby document.Id descending 
-            select new DocumentVm
-            {
-                Id = document.Id,
-                Title = document.Title,
-                Content = document.Content,
-                TrackingCode = document.TrackingCode,
-                Remarks = document.Remarks,
-                RequestType = requestType.Title,
-                Department = department.Name,
-                DocumentId = document.Id,
-                RequestTypeId = document.DepartmentId,
-                DepartmentId = document.DepartmentId,
-                CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
-            }
-              ).ToListAsync();
-       
+                select new DocumentVm
+                {
+                    Id = document.Id,
+                    Title = document.Title,
+                    Content = document.Content,
+                    TrackingCode = document.TrackingCode,
+                    Remarks = document.Remarks,
+                    RequestType = requestType.Title,
+                    Department = department.Name,
+                    DocumentId = document.Id,
+                    RequestTypeId = document.DepartmentId,
+                    DepartmentId = document.DepartmentId,
+                    CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
+                }
+            ).ToListAsync();
         var json = new { data = documents, success = true };
         return Json(json);
     }
@@ -84,9 +85,10 @@ public class DocumentStatusController : Controller
                     on document.DepartmentId equals department.Id
                 join requestType in _dbContext.RequestTypes.AsNoTracking()
                     on document.RequestTypeId equals requestType.Id
-                where document.CreatedBy != employee.Id  && document.StatusId != (int)StatusEnum.Received
-                                                         && employee.DepartmentId == document.RouteDepartmentId
-                orderby document.Id descending 
+                where document.CreatedBy != employee.Id // Only documents not created by the employee
+                      && document.StatusId != (int)StatusEnum.Received
+                      && employee.DepartmentId == document.RouteDepartmentId
+                orderby document.Id descending
                 select new DocumentVm
                 {
                     Id = document.Id,
@@ -115,6 +117,21 @@ public class DocumentStatusController : Controller
         document.ModifiedBy = documentStatus.EmployeeId;
         document.ModifiedDate = DateTime.Now;
         document.StatusId = (int)StatusEnum.Received;
+
+        _dbContext.Update(document);
+        await _dbContext.SaveChangesAsync();
+        
+        var json = new {  success = true };
+        return Json(json);
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateDocumentToCancel([FromBody] DocumentStatusVm documentStatus)
+    {
+        var document = await _dbContext.Documents.Where(d => d.Id == documentStatus.DocumentId).FirstOrDefaultAsync();
+        document.ModifiedBy = documentStatus.EmployeeId;
+        document.ModifiedDate = DateTime.Now;
+        document.StatusId = (int)StatusEnum.Cancelled;
 
         _dbContext.Update(document);
         await _dbContext.SaveChangesAsync();

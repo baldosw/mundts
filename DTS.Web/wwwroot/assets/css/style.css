@@ -1558,32 +1558,43 @@ div.dataTables_wrapper div.dataTables_filter {
 /* Print Document Style */
 /* CSS */
 /* Hide title and footer */
-
 @media print {
+  body {
+    overflow: hidden;
+  }
 
   body * {
-    visibility: hidden; /* Hide all elements */
+    visibility: hidden;
     position: relative;
   }
-  
-  .modal{
+
+  .modal {
     position: absolute;
-    top: 0 !important;
+    top: 0;
+    left: 0;
+    height: 80vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .modal, .modal * {     
-    visibility: visible; /* Show the modal and its contents */
-  }
- 
   .modal-content {
-    margin: 0; /* Reset margin */
-    border: none; /* Remove border */
-    box-shadow: none; /* Remove box shadow */
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+    max-height: 80vh;
   }
 
   .modal-content .modal-header,
   .modal-content .modal-footer {
-    display: none; /* Hide title and footer */
+    display: none;
+  }
+
+  .modal,
+  .modal * {
+    visibility: visible;
   }
 }
 

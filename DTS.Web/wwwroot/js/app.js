@@ -449,7 +449,11 @@ var outgoingDocumentColumns = {
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" data-toggle="modal" data-target="#cancelModal" onclick='loadIncomingData("/user/document/getdocument/${data}")'  >
                                    <i class="bi bi-check"></i>
                                    Cancel
-                                </a>                                                            
+                                </a>     
+                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-eye"></i>
+                                    Details
+                                </a>                                                           
                             </div>                             
                         </div>
                     `;
@@ -504,10 +508,10 @@ var incomingDocumentColumns = {
                                    <i class="bi bi-check"></i>
                                    Receive
                                 </a>    
-                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;"  >
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
                                    <i class="bi bi-eye"></i>
-                                   Details
-                                </a>                        
+                                    Details
+                                </a>                      
                             </div>                             
                         </div>
                     `;

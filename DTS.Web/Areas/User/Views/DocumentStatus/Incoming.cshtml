@@ -26,32 +26,131 @@
                 </table>
             </div>
         </div>
+        <div class="custom-buttons">
+            <button class="btn btn-success" id = "btnRefreshDataTable">
+                <i class="bi bi-arrow-repeat"></i>
+                Refresh
+            </button>
+        </div>
     </div>
 </div>
 
 <div class="modal fade" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="receiveModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Receive Document</h5>
+            </div>
+            <div class="modal-body">
+                <p>Would you like to receive the document?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id = "btnCloseModal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnReceiveDocument">Receive</button>
+                <input type="hidden" id = "documentId" >
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalPrintDocument" tabindex="-1" role="dialog" aria-labelledby="modalPrintDocumentLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Receive Document</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "iconClosePrintDocument">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div class="modal-body">
-          <p>Would you like to receive the document?</p>
+      <div class="modal-body" id = "modalPrintDocumentBody">
+          
+          <div class="d-flex justify-content-center mb-4">
+              <div id="qrcode"></div>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Tracking Code:</label>
+              <strong id='printDocumentTrackingCode'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Department:</label>
+              <strong id='printDocumentDepartmentName'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Title:</label>
+              <strong id='printDocumentTitle'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Content:</label>
+              <strong id='printDocumentContent'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Request Type:</label>
+              <strong id='printDocumentRequestTypeTitle'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Remarks:</label>
+              <strong id='printDocumentRemarks'></strong>
+          </div>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="btnReceiveDocument">Receive</button>
-          <input type="hidden" id = "documentId" >
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id = "btnClosePrintDocument">Close</button>
+            <button type="button" class="btn btn-primary" id = "btnPrintDocument">Print</button>
       </div>
     </div>
   </div>
 </div>
+
+
+
 <input type="hidden"  id = "employeeId" value="@ViewData["employeeId"]" >
 @section Scripts
 {
     <script type="text/javascript">
         $(document).ready(function() {
+            
             loadDataTable(incomingDocumentColumns)
+            
+            let customButtons = `
+                                <div class="custom-buttons">                               
+                                           <button class="btn btn-success" id = "btnRefreshDataTable">
+                                               <i class="bi bi-arrow-repeat"></i>
+                                               Refresh
+                                           </button>
+                                       </div>
+                             
+                             `
+                        
+            document.addEventListener('click', function(event) {                 
+                if (event.target && event.target.id === 'btnRefreshDataTable') {                     
+                    alert('refreshed')
+                    dataTable.destroy();
+                    dataTable.ajax.reload();
+                    loadDataTable(incomingDocumentColumns);
+                    document.querySelector('.dataTables_wrapper .dataTables_filter').insertAdjacentHTML('beforeend', customButtons)
+                }
+            });
+             
+            function refreshDatatable(){                                         
+                 dataTable.destroy();
+                 dataTable.ajax.reload();
+                 loadDataTable(incomingDocumentColumns)
+                
+                 document.querySelector('.dataTables_wrapper .dataTables_filter').insertAdjacentHTML('beforeend', customButtons)
+             }
+             
+             $('#btnClosePrintDocument').click(function (){
+                             $('#modalPrintDocument').modal('hide')    
+                         })
+                         
+                           $('#iconClosePrintDocument').click(function (){
+                                 $('#modalPrintDocument').modal('hide')    
+                              });   
+            
+             $('#btnPrintDocument').click(function (e) {
+                                     
+                                          
+                                           window.print();
+                                        
+                                 });
             
             $('#btnReceiveDocument').click(function (){
                 let employeeId = $('#employeeId').val();
@@ -66,9 +165,8 @@
                                 documentId
                            }),
                           success: function(response) {
-                              if (response && response.data ) {
-                                 console.log(response)
-                              }
+                              refreshDatatable();       
+                              $('#btnCloseModal').click();
                           },
                           error: function(xhr, status, error) {
                   
@@ -76,9 +174,9 @@
                           }
                       });
                 })
-            
+            $('.custom-buttons').appendTo('.dataTables_wrapper .dataTables_filter:eq(0)');           
         })
-        
+         
     </script>
 
 }

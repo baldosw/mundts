@@ -175,15 +175,15 @@ public class DocumentController : Controller
             Document document = new Document();
             document.CreatedDate = DateTime.Now;
             document.ModifiedDate = DateTime.Now;
-      
-            if (documentVm.DepartmentId is null)
-            {
-                ModelState.AddModelError("DepartmentId", "Department is required");
-            }
-        
+       
             if (documentVm.RequestTypeId is null)
             {
                 ModelState.AddModelError("RequestTypeId", "RequestType is required");
+            }
+            
+            if (documentVm.RouteDepartmentId is null)
+            {
+                ModelState.AddModelError("RouteDepartmentId", "Route Department is required");
             }
         
             if (ModelState.IsValid)
@@ -194,7 +194,7 @@ public class DocumentController : Controller
                 document.Title = documentVm.Title;
                 document.Content = documentVm.Content;
                 document.TrackingCode = documentVm.TrackingCode;
-                document.DepartmentId = documentVm.DepartmentId.Value;
+                document.DepartmentId = employee.DepartmentId;
                 document.RequestTypeId = documentVm.RequestTypeId.Value;
                 document.Remarks = documentVm.Remarks;
                 document.RouteDepartmentId = documentVm.RouteDepartmentId;
@@ -241,15 +241,15 @@ public class DocumentController : Controller
         {
             Document document = await _dbContext.Documents.Where(doc => doc.Id == documentVm.Id).FirstOrDefaultAsync();
             document.ModifiedDate = DateTime.Now;
-             
-            if (documentVm.DepartmentId is null)
-            {
-                ModelState.AddModelError("DepartmentId", "Department is required");
-            }
-        
+              
             if (documentVm.RequestTypeId is null)
             {
                 ModelState.AddModelError("RequestTypeId", "RequestType is required");
+            }
+
+            if (documentVm.RouteDepartmentId is null)
+            {
+                ModelState.AddModelError("RouteDepartmentId", "Route Department is required");
             }
         
             if (ModelState.IsValid)
@@ -260,12 +260,16 @@ public class DocumentController : Controller
                 document.Title = documentVm.Title;
                 document.Content = documentVm.Content;
                 document.TrackingCode = documentVm.TrackingCode;
-                document.DepartmentId = documentVm.DepartmentId.Value;
+                document.DepartmentId = employee.DepartmentId;
                 document.RequestTypeId = documentVm.RequestTypeId.Value;
                 document.Remarks = documentVm.Remarks;
                 document.RouteDepartmentId = documentVm.RouteDepartmentId;
                 document.ModifiedBy = employee.Id;
-            
+                if (document.StatusId != (int)StatusEnum.Received && document.StatusId != (int)StatusEnum.Completed)
+                {
+                    document.StatusId = (int)StatusEnum.Forwarded;
+                }
+                
                 _dbContext.Documents.Update(document);
                 await _dbContext.SaveChangesAsync();
 

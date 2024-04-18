@@ -52,13 +52,6 @@
                     <label for="message-text" class="col-form-label">Tracking Code:</label>
                     <strong id = 'trackingCode'></strong>
                     <div class="form-group">
-                        <label for="message-text" class="col-form-label">Department:</label>
-                        <select id="departmentId" asp-for="@Model.DepartmentId" asp-items="@Model.Departments" class="form-select" style="font-size: 12px !important;">
-                            <option value="">----Select Department----</option>
-                        </select>
-                        <p class="errorFieldText" id = 'errorFieldDepartmentId' data-errorfield = "departmentId"></p>
-                    </div>
-                    <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Title:</label>
                         <input type="text" class="form-control" id="title" >
                         <p class="errorFieldText" id = 'errorFieldTitle' data-errorfield = "title"></p>
@@ -111,13 +104,6 @@
                <input type="hidden" class="id form-control" id="updateId"   >
               <label for="message-text" class="col-form-label">Tracking Code:</label>
               <strong id='updateTrackingCode'></strong>
-              <div class="form-group">
-                  <label for="message-text" class="col-form-label">Department:</label>
-                  <select id="updateDepartmentId" asp-for="@Model.DepartmentId" asp-items="@Model.Departments" class="departmentId form-select" style="font-size: 12px !important;">
-                      <option value="">----Select Department----</option>
-                  </select>
-                  <p class="errorFieldText" id='errorUpdateFieldDepartmentId' data-errorfield="departmentId"></p>
-              </div>
               <div class="form-group">
                   <label for="recipient-name" class="col-form-label">Title:</label>
                   <input type="text" class="title form-control" id="updateTitle">
@@ -215,23 +201,33 @@
         $('.errorFieldText').css({'color': '#a83240', 'font-size': '10px'})               
        
         $(document).ready(function() {   
+        
+        let customButtons = `
+                        <div class="custom-buttons">
+                                   <button class="btn btn-primary" data-toggle="modal" data-target="#modalNewDocument" id = "btnNewDocument">
+                                       <i class="bi bi-file-earmark-plus"></i>
+                                       New Document
+                                   </button>
+                                   <button class="btn btn-success" id = "btnRefreshDataTable">
+                                       <i class="bi bi-arrow-repeat"></i>
+                                       Refresh
+                                   </button>
+                               </div>
+                     
+                     `
+                     
+      document.addEventListener('click', function(event) {                 
+                     if (event.target && event.target.id === 'btnRefreshDataTable') {                     
+                         alert('refreshed')
+                         dataTable.destroy();
+                         dataTable.ajax.reload();
+                         loadDataTable(documentColumns);
+                         document.querySelector('.dataTables_wrapper .dataTables_filter').insertAdjacentHTML('beforeend', customButtons)
+                     }
+                 });
              
          function refreshDatatable(){
-             
-             let customButtons = `
-                <div class="custom-buttons">
-                           <button class="btn btn-primary" data-toggle="modal" data-target="#modalNewDocument" id = "btnNewDocument">
-                               <i class="bi bi-file-earmark-plus"></i>
-                               New Document
-                           </button>
-                           <button class="btn btn-success" id = "btnRefreshDataTable">
-                               <i class="bi bi-arrow-repeat"></i>
-                               Refresh
-                           </button>
-                       </div>
-             
-             `
-             
+              
              dataTable.destroy();
              dataTable.ajax.reload();
              loadDataTable(documentColumns)
@@ -243,7 +239,7 @@
             
                           let validateTitle = validateInput('Title', inputObject.title, 2, 50);
                           let validateContent = validateInput('Content', inputObject.content, 2, 400);
-                          let validateDepartment = validateSelect('Department', inputObject.departmentId);
+                        
                           let validateRouteDepartmentId = validateSelect('Routing Department', inputObject.routeDepartmentId);
                           let validateRequestTypeid = validateSelect('Request Type', inputObject.requestTypeId);
                          
@@ -251,13 +247,13 @@
                           
                           displayValidationError('#errorFieldTitle', validateTitle)
                           displayValidationError('#errorFieldContent', validateContent)
-                          displayValidationError('#errorFieldDepartmentId', validateDepartment)
+              
                           displayValidationError('#errorFieldRequestTypeId', validateRequestTypeid)
                            displayValidationError('#errorFieldRouteDepartmentId', validateRouteDepartmentId)
 
                            displayValidationError('#errorUpdateFieldTitle', validateTitle)
                             displayValidationError('#errorUpdateFieldContent', validateContent)
-                            displayValidationError('#errorUpdateFieldDepartmentId', validateDepartment)
+             
                             displayValidationError('#errorUpdateFieldRequestTypeId', validateRequestTypeid)
                            displayValidationError('#errorUpdateFieldRouteDepartmentId', validateRouteDepartmentId)
                            
@@ -364,7 +360,7 @@
                   });
           
         $('#btnSaveChangesDocument').on('click', function (e){                   
-                                 let departmentId = parseInt($('#departmentId').val());
+                                 // let departmentId = parseInt($('#departmentId').val());
                                   let requestTypeId = parseInt($('#requestTypeId').val());
                                   let title =  $('#title').val();
                                   let content =  $('#content').val();
@@ -372,8 +368,7 @@
                                   let routeDepartmentId = $('#routeDepartmentId').val();
                                                           
                                   
-                           let data = {
-                                   departmentId,
+                           let data = {                               
                                    requestTypeId,
                                    title,
                                    content,
@@ -390,7 +385,7 @@
                      e.stopPropagation(); 
     
                                           let documentId = parseInt($('#updateId').val());
-                                           let departmentId = parseInt($('#updateDepartmentId').val());
+                                           // let departmentId = parseInt($('#updateDepartmentId').val());
                                         let requestTypeId = parseInt($('#updateRequestTypeId').val());
                                         let title =  $('#updateTitle').val();
                                         let content =  $('#updateContent').val();
@@ -400,7 +395,7 @@
                                          
                                          
                                            let data = {
-                                                                             departmentId,
+                                                                      
                                                                              requestTypeId,
                                                                              title,
                                                                              content,
