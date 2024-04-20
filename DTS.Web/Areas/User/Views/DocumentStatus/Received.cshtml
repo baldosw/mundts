@@ -1,0 +1,253 @@
+﻿ @model DocumentVm;
+@{
+    ViewData["Title"] = "Received";
+}
+ 
+<div class="card">
+    <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="selectionTable table table-striped table-bordered" style="width:100%" id="dataTable">
+                    <thead>
+                    <tr class="bg-dark text-white ps-2">
+                    <th class="ps-3">Id</th>
+                    <th class="ps-3">Department</th>
+                    <th class="ps-3">TrackingCode</th>
+                    <th class="ps-3">Title</th>
+                    <th class="ps-3">Content</th>
+                    <th class="ps-3">Request Type</th>
+                    <th class="ps-3">Remarks</th>
+                    <th class="ps-3">CreatedDate</th>
+                    <th class="ps-3">Action</th>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="custom-buttons">
+            <button class="btn btn-success" id = "btnRefreshDataTable">
+                <i class="bi bi-arrow-repeat"></i>
+                Refresh
+            </button>
+        </div>
+    </div>
+</div>
+ 
+<div class="modal fade" id="modalForwardUpdateDocument" tabindex="-1" role="dialog" aria-labelledby="modalForwardUpdateDocumentLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalForwardDocumentTitle">Forward Document</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "iconForwardDocumentClose">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalForwardDocumentBody">
+          <div>
+              <label for="message-text" class="col-form-label">Tracking Code:</label>
+              <strong id='forwardDocumentTrackingCode'></strong>
+          </div>
+          
+          <div>
+              <label for="message-text" class="col-form-label">Department:</label>
+              <strong id='forwardDocumentDepartment'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Title:</label>
+              <strong id='forwardDocumentTitle'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Content:</label>
+              <strong id='forwardDocumentContent'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Request Type:</label>
+              <strong id='forwardDocumentRequestType'></strong>
+          </div>
+          <hr />
+          <div class="form-group">
+              <label for="message-text" class="col-form-label">Routing Department:</label>
+              <select id="routeDepartmentId" asp-for="@Model.RouteDepartmentId" asp-items="@Model.Departments" class="form-select" style="font-size: 12px !important;">
+                  <option value="">----Select Routing Department----</option>
+              </select>
+              <p class="errorFieldText" id='errorFieldRouteDepartmentId' data-errorfield="routeDepartmentId"></p>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Remarks:</label>
+              <textarea cols="30" rows="2" class="form-control" style="height: 50px;" id ="forwardDocumentRemarks"></textarea>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id = "btnForwardCloseDocument">Close</button>
+            <button type="button" class="btn btn-primary" id = "btnForwardDocument">Forward</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalPrintDocument" tabindex="-1" role="dialog" aria-labelledby="modalPrintDocumentLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id = "iconClosePrintDocument">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id = "modalPrintDocumentBody">
+          
+          <div class="d-flex justify-content-center mb-4">
+              <div id="qrcode"></div>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Tracking Code:</label>
+              <strong id='printDocumentTrackingCode'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Department:</label>
+              <strong id='printDocumentDepartmentName'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Title:</label>
+              <strong id='printDocumentTitle'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Content:</label>
+              <strong id='printDocumentContent'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Request Type:</label>
+              <strong id='printDocumentRequestTypeTitle'></strong>
+          </div>
+          <div>
+              <label for="message-text" class="col-form-label">Remarks:</label>
+              <strong id='printDocumentRemarks'></strong>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id = "btnClosePrintDocument">Close</button>
+            <button type="button" class="btn btn-primary" id = "btnPrintDocument">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<input type="hidden"  id = "employeeId" value="@ViewData["employeeId"]" >
+<input type="hidden" id = "documentId" >
+@section Scripts
+{
+
+    <script type="text/javascript">
+          let clientErrors = []
+    
+        $(document).ready(function() {
+            
+             loadDataTable(receivedDocumentsColumns)
+            
+            let customButtons = `
+                                <div class="custom-buttons">                               
+                                           <button class="btn btn-success" id = "btnRefreshDataTable">
+                                               <i class="bi bi-arrow-repeat"></i>
+                                               Refresh
+                                           </button>
+                                       </div>
+                             
+                             `
+                        
+            document.addEventListener('click', function(event) {                 
+                if (event.target && event.target.id === 'btnRefreshDataTable') {                     
+                    alert('refreshed')
+                    dataTable.destroy();
+                    dataTable.ajax.reload();
+                    loadDataTable(receivedDocumentsColumns);
+                    document.querySelector('.dataTables_wrapper .dataTables_filter').insertAdjacentHTML('beforeend', customButtons)
+                }
+            });
+             
+            function refreshDatatable(){                                         
+                 dataTable.destroy();
+                 dataTable.ajax.reload();
+                 loadDataTable(receivedDocumentsColumns)
+                
+                 document.querySelector('.dataTables_wrapper .dataTables_filter').insertAdjacentHTML('beforeend', customButtons)
+             }
+             
+             $('#btnClosePrintDocument').click(function (){
+                             $('#modalPrintDocument').modal('hide')    
+                         })
+                         
+                           $('#iconClosePrintDocument').click(function (){
+                                 $('#modalPrintDocument').modal('hide')    
+                              });   
+            
+            $('#btnForwardCloseDocument').click(function (){
+                
+                $('#modalForwardUpdateDocument', ).modal('hide')    
+            })
+                
+                $('#iconForwardDocumentClose').click(function (){
+                                
+                                $('#modalForwardUpdateDocument', ).modal('hide')    
+                            })
+                                
+                
+            
+             $('#btnPrintDocument').click(function (e) {
+                                     
+                                          
+                                           window.print();
+                                        
+                                 });
+      
+            $('#btnForwardDocument').click(function (){
+                  let employeeId = $('#employeeId').val();
+                                  let documentId = $('#documentId').val();
+                                   let routeDepartmentId = $('#routeDepartmentId').val();
+                                   let remarks = $('#forwardDocumentRemarks').val();
+                                   
+                                     $('.errorFieldText').text('')
+                                   
+                                    let validateRouteDepartmentId = validateSelect('Routing Department', routeDepartmentId);
+                                    displayValidationError('#errorFieldRouteDepartmentId', validateRouteDepartmentId)
+                                    
+                                      let data = {
+                                                                                 employeeId,
+                                                                                                                                  documentId,
+                                                                                                                                  routeDepartmentId,
+                                                                                                                                  remarks
+                                                                            }
+                                                                            
+                                                                            console.log(data)
+                                    
+                                    if (clientErrors.length < 1){
+                                        
+                                      
+                                    
+                                    $.ajax({
+                                            url: '/user/documentstatus/updateDocumenttoforward',
+                                            type: 'PUT',
+                                             contentType: 'application/json', 
+                                             data: JSON.stringify({
+                                                  employeeId,
+                                                  documentId,
+                                                  routeDepartmentId,
+                                                  remarks
+                                             }),
+                                            success: function(response) {
+                                                refreshDatatable();       
+                                                $('#btnForwardCloseDocument').click();
+                                            },
+                                            error: function(xhr, status, error) {
+                                    
+                                                 
+                                            }
+                                        });
+                                    }
+                                       clientErrors = [];    
+                })
+            $('.custom-buttons').appendTo('.dataTables_wrapper .dataTables_filter:eq(0)');           
+        })
+         
+    </script>
+
+}

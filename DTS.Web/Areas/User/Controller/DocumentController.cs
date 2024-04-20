@@ -17,7 +17,7 @@ public class DocumentController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
-
+    
     public DocumentController(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
@@ -38,11 +38,17 @@ public class DocumentController : Controller
             Text = entity.Name,
             Value = entity.Id.ToString()
         }).ToList();
-           
+        
+        string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var employee =  await _dbContext.Employees.Include(e => e.Department).Where(e => e.UserId == userId).FirstOrDefaultAsync();
+
+        ViewData["FirstName"] = employee.FirstName;
+        ViewData["LastName"] = employee.LastName;
+        ViewData["DepartmentShort"] = employee.Department.ShortName;
         return View(documentVm);
     }
     
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         DocumentVm documentVm = new DocumentVm();
         documentVm.TrackingCode = TrackingCodeGenerator.Generate();
@@ -52,7 +58,13 @@ public class DocumentController : Controller
             Value = rt.Id.ToString(),
             Text = rt.Title
         });
-         
+        
+        string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var employee = await _dbContext.Employees.Include(e => e.Department).Where(e => e.UserId == userId).FirstOrDefaultAsync();
+
+        ViewData["FirstName"] = employee.FirstName;
+        ViewData["LastName"] = employee.LastName;
+        ViewData["DepartmentShort"] = employee.Department.ShortName;
         return View(documentVm);
     }
 

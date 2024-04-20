@@ -1,4 +1,5 @@
-﻿using DTS.DataAccess;
+﻿using System.Security.Claims;
+using DTS.DataAccess;
 using DTS.Models;
 using DTS.Web.Areas.User.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace DTS.Web.Controllers;
 public class PersonalInformationController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     
-    public PersonalInformationController(ApplicationDbContext dbContext)
+    public PersonalInformationController(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
         _dbContext = dbContext;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<IActionResult> Index()
@@ -28,8 +31,14 @@ public class PersonalInformationController : Controller
                 Value = s.Id.ToString()
             }).ToListAsync();
 
-        Employee employee = await _dbContext.Employees.Include(e => e.Department).Where(e => e.Id == 3).SingleOrDefaultAsync();
+        string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var employee = await _dbContext.Employees.Include(e => e.Department).Where(e => e.UserId == userId).FirstOrDefaultAsync();
+
+        ViewData["FirstName"] = employee.FirstName;
+        ViewData["LastName"] = employee.LastName;
+        ViewData["DepartmentShort"] =  employee.Department.ShortName;
         personalInformationVm.Employee = employee; 
+          
         return View(personalInformationVm);
     }
     

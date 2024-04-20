@@ -269,8 +269,6 @@ function loadDocumentFromDatabase(urlFromClient){
             dataType: 'json',
             success: function(response) {
                 if (response && response.data && response.data.title) {
-                    // Populate the input box within the modal with the title
-                    console.log(response.data)
                     $('#updateTitle').val(response.data.title);
                     $('#updateContent').val(response.data.content);
                     $('#updateRemarks').val(response.data.remarks);
@@ -289,6 +287,32 @@ function loadDocumentFromDatabase(urlFromClient){
                 console.error(xhr.responseText);
             }
         });
+    });
+}
+
+function loadForwardDocument(urlFromClient){
+
+    $.ajax({
+        url: urlFromClient,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response && response.data && response.data.title) {
+                $('#forwardDocumentTrackingCode').text(response.data.trackingCode);
+                $('#forwardDocumentDepartment').text(response.data.departmentName);
+                $('#forwardDocumentTitle').text(response.data.title);
+                $('#forwardDocumentContent').text(response.data.content);
+                $('#forwardDocumentRequestType').text(response.data.requestTypeTitle);
+                $('#documentId').val(response.data.id);
+                $('#modalForwardUpdateDocument').modal('show');
+            } else {
+                console.error('Title not found in the response.');
+            }
+        },
+        error: function(xhr, status, error) {
+
+            console.error(xhr.responseText);
+        }
     });
 }
 
@@ -342,6 +366,9 @@ function loadPrintDocument(urlFromClient){
 }
   
 //------------------- Get All Documents -------------------------------------
+
+//TODO: User can only cancel the document if document is not modified by other user 
+// if modifiedby and created by is the same then he cannot edit it
  
 var documentColumns = {
     "processing": true,
@@ -366,7 +393,7 @@ var documentColumns = {
             data: 'id',
             "render": function (data, type, row) {
                 
-                if(row.statusId === 2 || row.statusId === 4)
+                if((row.modifiedBy === row.createdBy) && (row.statusId === 2 || row.statusId === 4))
                 {
                     return `
                         <div class="d-flex justify-content-center">
@@ -531,6 +558,64 @@ var incomingDocumentColumns = {
 
     'order': [[0, 'desc']]
 }
+
+//--------------------- Received Documents-----------------------------
+
+var receivedDocumentsColumns = {
+    "processing": true,
+    "serverSide": true,
+    "deferLoading": 10, // Load 10 records initially
+    "paging": true, // Enable paging
+    "pagingType": "full_numbers",
+    filter: true,
+    ajax: {
+        url: '/user/documentstatus/GetReceivedDocuments',
+    },
+    col: [
+        { data: 'id' },
+        {data: 'department', width: '5%'},
+        { data: 'trackingCode', width: '5%' },
+        { data: 'title', width: '20%' },
+        { data: 'content', width: '30%'  },
+        {data: 'requestType', width: '10%'},
+        {data: 'remarks', width: '30%'},
+        {data:'createdTimestamp', visible: false},
+        {
+            data: 'id',
+            "render": function (data) {
+                return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >                                
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" data-toggle="modal" data-target="#modalForwardUpdateDocument" onclick='loadForwardDocument("/user/document/getdocument/${data}")'  >
+                                   <i class="bi bi-arrow-up"></i>
+                                   Forward
+                                </a>    
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-eye"></i>
+                                    Details
+                                </a>                      
+                            </div>                             
+                        </div>
+                    `;
+            }, width: "5%"
+        }
+    ],
+    colDefs: [
+        {
+            targets: [0], // index of the column you want to hide
+            visible: false, // hide the column
+            searchable: true // allow searching on this column
+        }
+    ],
+    'select': {
+        'style': 'multi'
+    },
+
+    'order': [[0, 'desc']]
+}
+
 
  // --------------------- Get Documents By Page ---------------------------------
  
