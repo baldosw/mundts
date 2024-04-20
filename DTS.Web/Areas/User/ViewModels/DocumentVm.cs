@@ -56,5 +56,9 @@ public class DocumentVm
     public int? RouteDepartmentId { get; set; }
 
     public int StatusId { get; set; }
+
+    public int CreatedBy { get; set; }
+
+    public int ModifiedBy { get; set; }
  
 }

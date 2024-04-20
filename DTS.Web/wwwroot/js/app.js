@@ -12,6 +12,13 @@ var qrCodeDiv = document.getElementById('qrcode');
 
 var qrCode;
 
+let documentStatus = {
+    FORWARDED:1,
+    RECEIVED:2,
+    CANCELLED: 3,
+    COMPLETED:4
+}
+
 if(qrCodeDiv !== null  && qrCodeDiv !== 'undefined'){
     qrCode = new QRCode(qrCodeDiv, {
         text: '',
@@ -392,14 +399,34 @@ var documentColumns = {
         {
             data: 'id',
             "render": function (data, type, row) {
-                
-                if((row.modifiedBy === row.createdBy) && (row.statusId === 2 || row.statusId === 4))
+                if((row.statusId === documentStatus.CANCELLED) || (row.statusId === documentStatus.FORWARDED && row.createdBy === row.modifiedBy) )
                 {
                     return `
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
                             </a>
-                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >                                 
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >
+                                <a class="dropdown-item" href="#" onclick='loadDocumentFromDatabase("/user/document/getdocument/${data}")' style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
+                                <i class="bi bi-pencil-square" ></i>
+                                Update</a>
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-printer"></i>
+                                    Print
+                                </a>                          
+                            </div>                             
+                        </div>
+                    `;
+                    
+                }else if(row.statusId === documentStatus.RECEIVED && row.createdBy !== row.modifiedBy){
+
+                    return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >    
+                                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#completeModal" style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
+                                <i class="bi bi-pencil-square" ></i>
+                                Complete</a>                            
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
                                    <i class="bi bi-printer"></i>
                                     Print
@@ -412,10 +439,8 @@ var documentColumns = {
                         <div class="d-flex justify-content-center">
                             <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
                             </a>
-                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >
-                                <a class="dropdown-item" href="#" onclick='loadDocumentFromDatabase("/user/document/getdocument/${data}")' style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
-                                <i class="bi bi-pencil-square" ></i>
-                                Update</a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >    
+                                           
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
                                    <i class="bi bi-printer"></i>
                                     Print

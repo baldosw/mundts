@@ -193,15 +193,22 @@ public class DocumentStatusController : Controller
     public async Task<IActionResult> UpdateDocumentToCancel([FromBody] DocumentStatusVm documentStatus)
     {
         var document = await _dbContext.Documents.Where(d => d.Id == documentStatus.DocumentId).FirstOrDefaultAsync();
+
+        if (document.StatusId == (int)StatusEnum.Completed || document.StatusId == (int)StatusEnum.Forwarded &&
+            document.ModifiedBy != document.CreatedBy)
+        {
+            var failJsonData = new {  success = false, message = "You are not allowed to cancel a forwarded/completed document " };
+            return BadRequest(failJsonData);
+        }
+        
         document.ModifiedBy = documentStatus.EmployeeId;
         document.ModifiedDate = DateTime.Now;
         document.StatusId = (int)StatusEnum.Cancelled;
-
         _dbContext.Update(document);
         await _dbContext.SaveChangesAsync();
         
         var json = new {  success = true };
-        return Json(json);
+        return Ok(json);
     }
     
     [HttpPut]

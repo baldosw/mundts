@@ -97,6 +97,8 @@ public class DocumentController : Controller
                 RequestTypeId = document.DepartmentId,
                 DepartmentId = document.DepartmentId,
                 StatusId = document.StatusId.Value,
+                CreatedBy = document.CreatedBy,
+                ModifiedBy = document.ModifiedBy,
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();
         
