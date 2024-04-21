@@ -39,11 +39,10 @@
                             <input type="text" class="form-control" asp-for="Employee.ContactNumber">
                             <span asp-validation-for="Employee.ContactNumber" class="text-danger small"></span>
                         </div>
-                        <div class="col-md-6">
-                            <label asp-for="Employee.Email" class="form-label">Email</label>
-                            <input type="text" class="form-control" asp-for="Employee.Email">
-                            <span asp-validation-for="Employee.Email" class="text-danger small"></span>
-                        </div>
+                        
+                            <input type="hidden" class="form-control" asp-for="Employee.Email">
+                        
+                    
                         <div class="col-md-6">
                             <label asp-for="Employee.Address" class="form-label">Address</label>
                             <input type="text" class="form-control" asp-for="Employee.Address">

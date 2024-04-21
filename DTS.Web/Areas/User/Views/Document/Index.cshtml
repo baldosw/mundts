@@ -207,7 +207,7 @@
         </div>
     </div>
 </div>
-
+<input type="hidden"  id = "employeeId" value="@ViewData["employeeId"]" >
 @section Scripts
 {
     <script type="text/javascript">
@@ -427,6 +427,29 @@
                                                                          console.log(data)
                                         saveChanges(data,'put', '/user/document/UpdateDocument',  'Update Document', 'Successfully updated document');
                                      });
+          
+                    $('#btnCompleteDocument').click(function (){
+                           let employeeId = $('#employeeId').val();
+                                           let documentId = $('#documentId').val();
+                                             
+                                             $.ajax({
+                                                     url: '/user/documentstatus/UpdateDocumentToComplete',
+                                                     type: 'PUT',
+                                                      contentType: 'application/json', 
+                                                      data: JSON.stringify({
+                                                           employeeId,
+                                                           documentId
+                                                      }),
+                                                     success: function(response) {
+                                                         refreshDatatable();       
+                                                         $('#completeModal').modal("hide");
+                                                     },
+                                                     error: function(xhr, status, error) {
+                                             
+                                                          
+                                                     }
+                                                 });
+                        })
         
             });   
         

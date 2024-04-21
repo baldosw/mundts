@@ -1613,3 +1613,19 @@ div.dataTables_wrapper div.dataTables_filter {
 .auth{
   padding-top: 1rem;   
  }
+
+.sidebar-nav .nav-link{
+  background-color: #fff !important;
+  color: #012970;
+}
+
+.sidebar-nav .nav-link:hover{
+  background-color: rgba(55, 180, 240, 0.1) !important;
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 16px;
+  margin-right: 10px;
+  color: #4154f1 !important;
+}
+

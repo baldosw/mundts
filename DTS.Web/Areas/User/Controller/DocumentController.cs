@@ -45,6 +45,8 @@ public class DocumentController : Controller
         ViewData["FirstName"] = employee.FirstName;
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
+        ViewData["employeeId"] = employee.Id;
+       
         return View(documentVm);
     }
     
@@ -83,6 +85,7 @@ public class DocumentController : Controller
             join requestType in _dbContext.RequestTypes.AsNoTracking()
                 on document.RequestTypeId equals requestType.Id
                 where document.CreatedBy == employee.Id
+                && document.StatusId != (int)StatusEnum.Completed
             orderby document.Id descending 
             select new DocumentVm
             {

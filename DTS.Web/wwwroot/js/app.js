@@ -371,6 +371,31 @@ function loadPrintDocument(urlFromClient){
     
    
 }
+
+
+function loadDocumentId(urlFromClient){
+
+    $.ajax({
+        url: urlFromClient,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response && response.data) {
+                console.log(response.data)
+                $('#documentId').val(response.data.id);                 
+                $('#completeModal').modal('show');
+            } else {
+              
+            }
+        },
+        error: function(xhr, status, error) {
+
+            console.error(xhr.responseText);
+        }
+    });
+
+
+}
   
 //------------------- Get All Documents -------------------------------------
 
@@ -424,7 +449,7 @@ var documentColumns = {
                             <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
                             </a>
                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >    
-                                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#completeModal" style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
+                                  <a class="dropdown-item" href="#" onclick='loadDocumentId("/user/document/getdocument/${data}")' style = "font-size: 12px !important;"   id = "btnUpdateDocumentModal" >
                                 <i class="bi bi-pencil-square" ></i>
                                 Complete</a>                            
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
@@ -617,6 +642,61 @@ var receivedDocumentsColumns = {
                                    <i class="bi bi-arrow-up"></i>
                                    Forward
                                 </a>    
+                                <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
+                                   <i class="bi bi-eye"></i>
+                                    Details
+                                </a>                      
+                            </div>                             
+                        </div>
+                    `;
+            }, width: "5%"
+        }
+    ],
+    colDefs: [
+        {
+            targets: [0], // index of the column you want to hide
+            visible: false, // hide the column
+            searchable: true // allow searching on this column
+        }
+    ],
+    'select': {
+        'style': 'multi'
+    },
+
+    'order': [[0, 'desc']]
+}
+
+
+
+//--------------------- Completed Documents-----------------------------
+
+var completedDocumentsColumns = {
+    "processing": true,
+    "serverSide": true,
+    "deferLoading": 10, // Load 10 records initially
+    "paging": true, // Enable paging
+    "pagingType": "full_numbers",
+    filter: true,
+    ajax: {
+        url: '/user/documentstatus/GetCompletedDocuments',
+    },
+    col: [
+        { data: 'id' },
+        {data: 'department', width: '5%'},
+        { data: 'trackingCode', width: '5%' },
+        { data: 'title', width: '20%' },
+        { data: 'content', width: '30%'  },
+        {data: 'requestType', width: '10%'},
+        {data: 'remarks', width: '30%'},
+        {data:'createdTimestamp', visible: false},
+        {
+            data: 'id',
+            "render": function (data) {
+                return `
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-info btn-hover text-end text-white d-block d-flex justify-content-center align-items-center dropdown-toggle pl-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 30px; height: 30px">                                                
+                            </a>
+                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >                                                                  
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
                                    <i class="bi bi-eye"></i>
                                     Details
