@@ -37,11 +37,20 @@ public class DocumentVm
      
     public int? DepartmentId { get; set; }
 
+    [ValidateNever]
+    public string? CurrentStatus { get; set; }
+
+    public string? OriginalAuthor { get; set; }
+
     public string Remarks { get; set; }
 
     public int CreatedById { get; set; }
 
-    public DateTime CreatedDate { get; set; }
+    [ValidateNever]
+    public DateTime? CreatedDate { get; set; }
+
+    [ValidateNever]
+    public string? CreatedDateString { get; set; }
 
     public long CreatedTimestamp { get; set; }
 

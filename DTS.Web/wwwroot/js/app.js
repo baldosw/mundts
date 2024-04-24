@@ -350,11 +350,13 @@ function loadPrintDocument(urlFromClient){
         success: function(response) {
             if (response && response.data && response.data.title) {
                 $('#printDocumentTrackingCode').text(response.data.trackingCode);
-                $('#printDocumentDepartmentName').text(response.data.departmentName);
+                $('#printDocumentDepartmentName').text(`${response.data.originalAuthor}`);
                 $('#printDocumentTitle').text(response.data.title);
                 $('#printDocumentContent').text(response.data.content);
                 $('#printDocumentRequestTypeTitle').text(response.data.requestTypeTitle);
                 $('#printDocumentRemarks').text(response.data.remarks);
+                $('#printDocumentCurrentStatus').text(response.data.currentStatus);
+                $('#printDocumentCreatedDate').text(response.data.createdDateString);
                 
                 updateQRCode(response.data.trackingCode)
                  
@@ -414,12 +416,12 @@ var documentColumns = {
     },
     col: [
         { data: 'id' },
-        {data: 'department', width: '5%'},
+        {data: 'originalAuthor', width: '5%'},
         { data: 'trackingCode', width: '5%' },
-        { data: 'title', width: '20%' },         
-        { data: 'content', width: '30%'  },
+        { data: 'title', width: '20%' },
         {data: 'requestType', width: '10%'},
-        {data: 'remarks', width: '30%'},
+        {data: 'currentStatus', width: '10%'},
+        {data:'createdDateString', width: '10%'},
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',
@@ -508,12 +510,12 @@ var outgoingDocumentColumns = {
     },
     col: [
         { data: 'id' },
-        {data: 'department', width: '5%'},
+        {data: 'originalAuthor', width: '5%'},
         { data: 'trackingCode', width: '5%' },
         { data: 'title', width: '20%' },
-        { data: 'content', width: '30%'  },
         {data: 'requestType', width: '10%'},
-        {data: 'remarks', width: '30%'},
+        {data: 'currentStatus', width: '10%'},
+        {data:'createdDateString', width: '10%'},         
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',
@@ -566,12 +568,12 @@ var incomingDocumentColumns = {
     },
     col: [
         { data: 'id' },
-        {data: 'department', width: '5%'},
+        {data: 'originalAuthor', width: '5%'},
         { data: 'trackingCode', width: '5%' },
         { data: 'title', width: '20%' },
-        { data: 'content', width: '30%'  },
         {data: 'requestType', width: '10%'},
-        {data: 'remarks', width: '30%'},
+        {data: 'currentStatus', width: '10%'},
+        {data:'createdDateString', width: '10%'},
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',
@@ -623,12 +625,12 @@ var receivedDocumentsColumns = {
     },
     col: [
         { data: 'id' },
-        {data: 'department', width: '5%'},
+        {data: 'originalAuthor', width: '5%'},
         { data: 'trackingCode', width: '5%' },
         { data: 'title', width: '20%' },
-        { data: 'content', width: '30%'  },
         {data: 'requestType', width: '10%'},
-        {data: 'remarks', width: '30%'},
+        {data: 'currentStatus', width: '10%'},
+        {data:'createdDateString', width: '10%'},
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',
@@ -682,12 +684,12 @@ var completedDocumentsColumns = {
     },
     col: [
         { data: 'id' },
-        {data: 'department', width: '5%'},
+        {data: 'originalAuthor', width: '5%'},
         { data: 'trackingCode', width: '5%' },
         { data: 'title', width: '20%' },
-        { data: 'content', width: '30%'  },
         {data: 'requestType', width: '10%'},
-        {data: 'remarks', width: '30%'},
+        {data: 'currentStatus', width: '10%'},
+        {data:'createdDateString', width: '10%'},
         {data:'createdTimestamp', visible: false},
         {
             data: 'id',

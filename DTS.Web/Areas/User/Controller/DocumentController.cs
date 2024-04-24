@@ -84,6 +84,8 @@ public class DocumentController : Controller
                 on document.DepartmentId equals department.Id
             join requestType in _dbContext.RequestTypes.AsNoTracking()
                 on document.RequestTypeId equals requestType.Id
+                join status in _dbContext.Statuses on document.StatusId equals status.Id 
+            join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
                 where document.CreatedBy == employee.Id
                 && document.StatusId != (int)StatusEnum.Completed
             orderby document.Id descending 
@@ -102,6 +104,9 @@ public class DocumentController : Controller
                 StatusId = document.StatusId.Value,
                 CreatedBy = document.CreatedBy,
                 ModifiedBy = document.ModifiedBy,
+                CurrentStatus = status.Title,
+                CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();
         
@@ -117,6 +122,8 @@ public class DocumentController : Controller
                 on document.DepartmentId equals department.Id
             join requestType in _dbContext.RequestTypes.AsNoTracking()
                 on document.RequestTypeId equals requestType.Id
+                join status in _dbContext.Statuses on document.StatusId equals status.Id
+            join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
             orderby document.Id descending 
             where document.Id == id
             select new DocumentVm
@@ -134,6 +141,9 @@ public class DocumentController : Controller
                 RequestTypeTitle = requestType.Title,
                 RouteDepartmentId = document.RouteDepartmentId,
                 StatusId = document.StatusId.Value,
+                OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
+                CurrentStatus = status.Title,
+                CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).SingleOrDefaultAsync();
         
@@ -223,7 +233,26 @@ public class DocumentController : Controller
             
                 await _dbContext.Documents.AddAsync(document);
                 await _dbContext.SaveChangesAsync();
+                
+                //Create Tracking History
+                TransactionHistory transactionHistory = new TransactionHistory();
+                transactionHistory.DepartmentId = employee.DepartmentId;
+                transactionHistory.StatusId = (int)StatusEnum.Forwarded;
+                transactionHistory.Title = documentVm.Title;
+                transactionHistory.TrackingCode = documentVm.TrackingCode;
+                transactionHistory.Content = documentVm.Content;
+                transactionHistory.Remarks = documentVm.Remarks;
+                transactionHistory.CreatedDate = DateTime.Now;
+                transactionHistory.ModifiedDate = DateTime.Now;
+                transactionHistory.CreatedBy = employee.Id;
+                transactionHistory.ModifiedBy = employee.Id;
+                transactionHistory.RouteDepartmentId = documentVm.RouteDepartmentId;
+                transactionHistory.RequestTypeId = documentVm.RequestTypeId.Value;
+                transactionHistory.DocumentId = document.Id;
 
+                await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+                await _dbContext.SaveChangesAsync();
+              
                 var dataJson = new { isSuccess = true };
             
                 return Ok(dataJson);

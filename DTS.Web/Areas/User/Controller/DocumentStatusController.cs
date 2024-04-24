@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using DTS.Common;
 using DTS.DataAccess;
+using DTS.Models;
 using DTS.Web.Areas.User.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -88,13 +89,15 @@ public class DocumentStatusController : Controller
 
         var documents = await (from document in _dbContext.Documents
                 join department in _dbContext.Departments.AsNoTracking()
-                    on document.DepartmentId equals department.Id // Corrected this line
+                    on document.DepartmentId equals department.Id  
                 join requestType in _dbContext.RequestTypes.AsNoTracking()
                     on document.RequestTypeId equals requestType.Id
+                    join status in _dbContext.Statuses on document.StatusId equals status.Id
+                join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
                 where  
                        document.StatusId == (int)StatusEnum.Forwarded 
                       && document.StatusId != (int)StatusEnum.Received 
-                      && document.ModifiedBy == employee.Id // Added this line
+                      && document.ModifiedBy == employee.Id  
                 orderby document.Id descending 
                 select new DocumentVm
                 {
@@ -108,6 +111,9 @@ public class DocumentStatusController : Controller
                     DocumentId = document.Id,
                     RequestTypeId = document.DepartmentId,
                     DepartmentId = document.DepartmentId,
+                    CurrentStatus = status.Title,
+                    CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})", 
                     CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
                 }
             ).ToListAsync();
@@ -125,8 +131,12 @@ public class DocumentStatusController : Controller
                     on document.DepartmentId equals department.Id
                 join requestType in _dbContext.RequestTypes.AsNoTracking()
                     on document.RequestTypeId equals requestType.Id
-                where document.CreatedBy != employee.Id // Only documents not created by the employee
+                    join status in _dbContext.Statuses on document.StatusId equals status.Id
+                join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
+                where document.CreatedBy != employee.Id  
                       && document.StatusId != (int)StatusEnum.Received
+                      && document.StatusId != (int)StatusEnum.Cancelled
+                      && document.StatusId != (int)StatusEnum.Completed
                       && employee.DepartmentId == document.RouteDepartmentId
                 orderby document.Id descending
                 select new DocumentVm
@@ -141,6 +151,9 @@ public class DocumentStatusController : Controller
                     DocumentId = document.Id,
                     RequestTypeId = document.DepartmentId,
                     DepartmentId = document.DepartmentId,
+                    CurrentStatus = status.Title,
+                    CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                     CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
                 }
             ).ToListAsync();
@@ -160,6 +173,8 @@ public class DocumentStatusController : Controller
                 on document.DepartmentId equals department.Id
             join requestType in _dbContext.RequestTypes.AsNoTracking()
                 on document.RequestTypeId equals requestType.Id
+            join status in _dbContext.Statuses on document.StatusId equals status.Id
+            join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
             where document.StatusId == (int)StatusEnum.Received
                   && employee.DepartmentId == document.RouteDepartmentId
                   && (document.ModifiedBy == employee.Id)
@@ -176,6 +191,9 @@ public class DocumentStatusController : Controller
                 DocumentId = document.Id,
                 RequestTypeId = document.DepartmentId,
                 DepartmentId = document.DepartmentId,
+                CurrentStatus = status.Title,
+                CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }
         ).ToListAsync();
@@ -195,6 +213,8 @@ public class DocumentStatusController : Controller
                 on document.DepartmentId equals department.Id
             join requestType in _dbContext.RequestTypes.AsNoTracking()
                 on document.RequestTypeId equals requestType.Id
+            join status in _dbContext.Statuses on document.StatusId equals status.Id
+            join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
             where document.CreatedBy == employee.Id
                   && document.StatusId == (int)StatusEnum.Completed
             orderby document.Id descending 
@@ -213,6 +233,9 @@ public class DocumentStatusController : Controller
                 StatusId = document.StatusId.Value,
                 CreatedBy = document.CreatedBy,
                 ModifiedBy = document.ModifiedBy,
+                CurrentStatus = status.Title,
+                CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();
         
@@ -233,6 +256,26 @@ public class DocumentStatusController : Controller
         _dbContext.Update(document);
         await _dbContext.SaveChangesAsync();
         
+        //Transaction History
+        TransactionHistory transactionHistory = new TransactionHistory();
+        transactionHistory.DepartmentId = document.DepartmentId;
+        transactionHistory.Title = document.Title;
+        transactionHistory.TrackingCode = document.TrackingCode;
+        transactionHistory.Content = document.Content;
+        transactionHistory.Remarks = document.Remarks;
+        transactionHistory.CreatedDate = document.CreatedDate;
+        transactionHistory.CreatedBy = document.CreatedBy;
+        transactionHistory.RouteDepartmentId = document.RouteDepartmentId;
+        transactionHistory.RequestTypeId = document.RequestTypeId;
+        transactionHistory.DocumentId = document.Id;
+        
+        transactionHistory.ModifiedBy = documentStatus.EmployeeId;
+        transactionHistory.ModifiedDate = DateTime.Now;
+        transactionHistory.StatusId = (int)StatusEnum.Received;
+ 
+        await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+        await _dbContext.SaveChangesAsync();
+         
         var json = new {  success = true };
         return Json(json);
     }
@@ -258,6 +301,26 @@ public class DocumentStatusController : Controller
             document.StatusId = (int)StatusEnum.Cancelled;
             _dbContext.Update(document);
             await _dbContext.SaveChangesAsync();
+            
+            //Transaction History
+            TransactionHistory transactionHistory = new TransactionHistory();
+            transactionHistory.DepartmentId = document.DepartmentId;
+            transactionHistory.Title = document.Title;
+            transactionHistory.TrackingCode = document.TrackingCode;
+            transactionHistory.Content = document.Content;
+            transactionHistory.Remarks = document.Remarks;
+            transactionHistory.CreatedDate = document.CreatedDate;
+            transactionHistory.CreatedBy = document.CreatedBy;
+            transactionHistory.RouteDepartmentId = document.RouteDepartmentId;
+            transactionHistory.RequestTypeId = document.RequestTypeId;
+            transactionHistory.DocumentId = document.Id;
+        
+            transactionHistory.ModifiedBy = documentStatus.EmployeeId;
+            transactionHistory.ModifiedDate = DateTime.Now;
+            transactionHistory.StatusId = (int)StatusEnum.Cancelled;
+ 
+            await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+            await _dbContext.SaveChangesAsync();
         
             var json = new {  success = true };
             return Ok(json);
@@ -267,9 +330,6 @@ public class DocumentStatusController : Controller
             var failJsonData = new {  success = false, message = "You are not allowed to cancel a forwarded/completed document " };
             return BadRequest(failJsonData);
         }
-        
-   
-       
     }
     
     [HttpPut]
@@ -283,6 +343,26 @@ public class DocumentStatusController : Controller
         document.RouteDepartmentId = documentStatus.RouteDepartmentId;
 
         _dbContext.Update(document);
+        await _dbContext.SaveChangesAsync();
+        
+        //Transaction History
+        TransactionHistory transactionHistory = new TransactionHistory();
+        transactionHistory.DepartmentId = document.DepartmentId;
+        transactionHistory.Title = document.Title;
+        transactionHistory.TrackingCode = document.TrackingCode;
+        transactionHistory.Content = document.Content;
+        transactionHistory.Remarks = documentStatus.Remarks;
+        transactionHistory.CreatedDate = document.CreatedDate;
+        transactionHistory.CreatedBy = document.CreatedBy;
+        transactionHistory.RouteDepartmentId = documentStatus.RouteDepartmentId;
+        transactionHistory.RequestTypeId = document.RequestTypeId;
+        transactionHistory.DocumentId = document.Id;
+        
+        transactionHistory.ModifiedBy = documentStatus.EmployeeId;
+        transactionHistory.ModifiedDate = DateTime.Now;
+        transactionHistory.StatusId = (int)StatusEnum.Forwarded;
+ 
+        await _dbContext.TransactionHistories.AddAsync(transactionHistory);
         await _dbContext.SaveChangesAsync();
         
         var json = new {  success = true };
@@ -304,6 +384,26 @@ public class DocumentStatusController : Controller
             document.StatusId = (int)StatusEnum.Completed;
             document.Remarks = "COMPLETED";
             _dbContext.Update(document);
+            await _dbContext.SaveChangesAsync();
+            
+            //Transaction History
+            TransactionHistory transactionHistory = new TransactionHistory();
+            transactionHistory.DepartmentId = document.DepartmentId;
+            transactionHistory.Title = document.Title;
+            transactionHistory.TrackingCode = document.TrackingCode;
+            transactionHistory.Content = document.Content;
+            transactionHistory.CreatedDate = document.CreatedDate;
+            transactionHistory.CreatedBy = document.CreatedBy;
+            transactionHistory.RouteDepartmentId = documentStatus.RouteDepartmentId;
+            transactionHistory.RequestTypeId = document.RequestTypeId;
+            transactionHistory.DocumentId = document.Id;
+        
+            transactionHistory.ModifiedBy = documentStatus.EmployeeId;
+            transactionHistory.ModifiedDate = DateTime.Now;
+            transactionHistory.StatusId = (int)StatusEnum.Completed;
+            document.Remarks = "COMPLETED";
+ 
+            await _dbContext.TransactionHistories.AddAsync(transactionHistory);
             await _dbContext.SaveChangesAsync();
         
             var json = new {  success = true };
