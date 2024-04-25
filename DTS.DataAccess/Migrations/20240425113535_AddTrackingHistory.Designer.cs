@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DTS.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240423120256_ChangedSchemaOnTransactionHistory")]
-    partial class ChangedSchemaOnTransactionHistory
+    [Migration("20240425113535_AddTrackingHistory")]
+    partial class AddTrackingHistory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -212,7 +212,7 @@ namespace DTS.DataAccess.Migrations
                     b.ToTable("Statuses");
                 });
 
-            modelBuilder.Entity("DTS.Models.TransactionHistory", b =>
+            modelBuilder.Entity("DTS.Models.TrackingHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -270,7 +270,7 @@ namespace DTS.DataAccess.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("TransactionHistories");
+                    b.ToTable("TrackingHistories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -505,7 +505,7 @@ namespace DTS.DataAccess.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("DTS.Models.TransactionHistory", b =>
+            modelBuilder.Entity("DTS.Models.TrackingHistory", b =>
                 {
                     b.HasOne("DTS.Models.Department", "Department")
                         .WithMany()

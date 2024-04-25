@@ -94,6 +94,7 @@ public class DocumentStatusController : Controller
                     on document.RequestTypeId equals requestType.Id
                     join status in _dbContext.Statuses on document.StatusId equals status.Id
                 join employeeFromDb in _dbContext.Employees on document.CreatedBy equals employeeFromDb.Id
+                join routeDepartment in _dbContext.Departments on document.RouteDepartmentId equals routeDepartment.Id
                 where  
                        document.StatusId == (int)StatusEnum.Forwarded 
                       && document.StatusId != (int)StatusEnum.Received 
@@ -113,6 +114,7 @@ public class DocumentStatusController : Controller
                     DepartmentId = document.DepartmentId,
                     CurrentStatus = status.Title,
                     CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                    RouteDepartment = routeDepartment.Name,
                     OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})", 
                     CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
                 }
@@ -257,7 +259,7 @@ public class DocumentStatusController : Controller
         await _dbContext.SaveChangesAsync();
         
         //Transaction History
-        TransactionHistory transactionHistory = new TransactionHistory();
+        TrackingHistory transactionHistory = new TrackingHistory();
         transactionHistory.DepartmentId = document.DepartmentId;
         transactionHistory.Title = document.Title;
         transactionHistory.TrackingCode = document.TrackingCode;
@@ -273,7 +275,7 @@ public class DocumentStatusController : Controller
         transactionHistory.ModifiedDate = DateTime.Now;
         transactionHistory.StatusId = (int)StatusEnum.Received;
  
-        await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+        await _dbContext.TrackingHistories.AddAsync(transactionHistory);
         await _dbContext.SaveChangesAsync();
          
         var json = new {  success = true };
@@ -303,7 +305,7 @@ public class DocumentStatusController : Controller
             await _dbContext.SaveChangesAsync();
             
             //Transaction History
-            TransactionHistory transactionHistory = new TransactionHistory();
+            TrackingHistory transactionHistory = new TrackingHistory();
             transactionHistory.DepartmentId = document.DepartmentId;
             transactionHistory.Title = document.Title;
             transactionHistory.TrackingCode = document.TrackingCode;
@@ -319,7 +321,7 @@ public class DocumentStatusController : Controller
             transactionHistory.ModifiedDate = DateTime.Now;
             transactionHistory.StatusId = (int)StatusEnum.Cancelled;
  
-            await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+            await _dbContext.TrackingHistories.AddAsync(transactionHistory);
             await _dbContext.SaveChangesAsync();
         
             var json = new {  success = true };
@@ -346,7 +348,7 @@ public class DocumentStatusController : Controller
         await _dbContext.SaveChangesAsync();
         
         //Transaction History
-        TransactionHistory transactionHistory = new TransactionHistory();
+        TrackingHistory transactionHistory = new TrackingHistory();
         transactionHistory.DepartmentId = document.DepartmentId;
         transactionHistory.Title = document.Title;
         transactionHistory.TrackingCode = document.TrackingCode;
@@ -362,7 +364,7 @@ public class DocumentStatusController : Controller
         transactionHistory.ModifiedDate = DateTime.Now;
         transactionHistory.StatusId = (int)StatusEnum.Forwarded;
  
-        await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+        await _dbContext.TrackingHistories.AddAsync(transactionHistory);
         await _dbContext.SaveChangesAsync();
         
         var json = new {  success = true };
@@ -387,7 +389,7 @@ public class DocumentStatusController : Controller
             await _dbContext.SaveChangesAsync();
             
             //Transaction History
-            TransactionHistory transactionHistory = new TransactionHistory();
+            TrackingHistory transactionHistory = new TrackingHistory();
             transactionHistory.DepartmentId = document.DepartmentId;
             transactionHistory.Title = document.Title;
             transactionHistory.TrackingCode = document.TrackingCode;
@@ -403,7 +405,7 @@ public class DocumentStatusController : Controller
             transactionHistory.StatusId = (int)StatusEnum.Completed;
             document.Remarks = "COMPLETED";
  
-            await _dbContext.TransactionHistories.AddAsync(transactionHistory);
+            await _dbContext.TrackingHistories.AddAsync(transactionHistory);
             await _dbContext.SaveChangesAsync();
         
             var json = new {  success = true };

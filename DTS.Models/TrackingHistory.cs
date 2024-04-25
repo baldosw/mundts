@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace DTS.Models;
 
-public class TransactionHistory
+public class TrackingHistory
 {
     [Key]
     public int Id { get; set; }
@@ -47,5 +46,4 @@ public class TransactionHistory
     public DateTime CreatedDate { get; set; }
 
     public DateTime ModifiedDate { get; set; }
- 
 }

@@ -357,6 +357,16 @@ function loadPrintDocument(urlFromClient){
                 $('#printDocumentRemarks').text(response.data.remarks);
                 $('#printDocumentCurrentStatus').text(response.data.currentStatus);
                 $('#printDocumentCreatedDate').text(response.data.createdDateString);
+                $('#printDocumentHolder').text(response.data.holder);
+                 
+                if(response.data.currentStatus.toUpperCase() === "FORWARDED"){
+                    $('#routeDepartmentIsStatus').css('display', 'block');
+                    $('#printDocumentRouteDepartment').text(response.data.routeDepartment);
+                }else{
+                    console.log('theres no route ')
+                }
+                
+                $("#routeDepartmentIsStatus").hi
                 
                 updateQRCode(response.data.trackingCode)
                  
@@ -421,6 +431,8 @@ var documentColumns = {
         { data: 'title', width: '20%' },
         {data: 'requestType', width: '10%'},
         {data: 'currentStatus', width: '10%'},
+        {data: 'routeDepartment', width: '10%'},
+        {data: 'holder', width: '10%'},
         {data:'createdDateString', width: '10%'},
         {data:'createdTimestamp', visible: false},
         {
@@ -515,6 +527,7 @@ var outgoingDocumentColumns = {
         { data: 'title', width: '20%' },
         {data: 'requestType', width: '10%'},
         {data: 'currentStatus', width: '10%'},
+        {data: 'routeDepartment', width: '10%'},
         {data:'createdDateString', width: '10%'},         
         {data:'createdTimestamp', visible: false},
         {

@@ -58,9 +58,15 @@ public class DocumentVm
 
     [ValidateNever]
     public string DepartmentName { get; set; }
+    
+    [ValidateNever]
+    public string RouteDepartment { get; set; }
 
     [ValidateNever]
     public string RequestTypeTitle { get; set; }
+    
+    [ValidateNever]
+    public string Holder { get; set; }
 
     public int? RouteDepartmentId { get; set; }
 

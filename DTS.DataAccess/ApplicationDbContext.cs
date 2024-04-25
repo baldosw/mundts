@@ -20,5 +20,6 @@ public partial class ApplicationDbContext : IdentityDbContext<IdentityUser>
     public virtual DbSet<Status> Statuses { get; set; }
     public virtual DbSet<Document> Documents { get; set; }
     public virtual DbSet<RequestType> RequestTypes { get; set; }
-    public virtual DbSet<TransactionHistory> TransactionHistories { get; set; }
+    
+    public virtual DbSet<TrackingHistory> TrackingHistories { get; set; }
 }
