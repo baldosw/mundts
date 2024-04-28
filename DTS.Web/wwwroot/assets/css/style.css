@@ -1689,6 +1689,7 @@ div.dataTables_wrapper div.dataTables_filter {
   font-weight: 600;
   color: #9251ac;
   letter-spacing: 1.5px;
+  margin-bottom: 1rem;
 }
 .timeline__event__content {
   padding: 20px;
@@ -1866,13 +1867,7 @@ div.dataTables_wrapper div.dataTables_filter {
     left: 100%;
   }
 }
-
-
-div.timeline__event__title{
-  margin-bottom: 12px !important;
-}
-
-
+ 
 .tracking__information{
   padding: 0;
   margin-bottom: 12px;
