@@ -51,6 +51,9 @@ public class DocumentVm
 
     [ValidateNever]
     public string? CreatedDateString { get; set; }
+    
+    [ValidateNever]
+    public string? ModifiedDateString { get; set; }
 
     public long CreatedTimestamp { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model PersonalInformationVm
+@using DTS.Common
+@model IList<DocumentVm>
 
 @{
     ViewData["Title"] = "Tracking History";
@@ -10,79 +11,136 @@
     <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
     <div class="card-body">
         <div class="row">
-            <div class="col-md-12">
-                 <div class="timeline"> 
-                   <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type1">
-                     <div class="timeline__event__icon ">
-                       <i class="lni-cake"></i>
-                 
-                     </div>
-                     <div class="timeline__event__date">
-                       20-08-2019
-                     </div>
-                     <div class="timeline__event__content ">
-                       <div class="timeline__event__title">
-                         Birthday
-                       </div>
-                       <div class="timeline__event__description">
-                         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel, nam! Nam eveniet ut aliquam ab asperiores, accusamus iure veniam corporis incidunt reprehenderit accusantium id aut architecto harum quidem dolorem in!</p>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="timeline__event animated fadeInUp delay-2s timeline__event--type2">
-                     <div class="timeline__event__icon">
-                       <i class="bi bi-check2"></i>
-                 
-                     </div>
-                     <div class="timeline__event__date">
-                       20-08-2019
-                     </div>
-                     <div class="timeline__event__content">
-                       <div class="timeline__event__title">
-                         Lunch
-                       </div>
-                       <div class="timeline__event__description">
-                         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel, nam! Nam eveniet ut aliquam ab asperiores, accusamus iure veniam corporis incidunt reprehenderit accusantium id aut architecto harum quidem dolorem in!</p>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="timeline__event animated fadeInUp delay-1s timeline__event--type3">
-                     <div class="timeline__event__icon">
-                       <i class="bi bi-arrow-up"></i>
-                 
-                     </div>
-                     <div class="timeline__event__date">
-                       20-08-2019
-                     </div>
-                     <div class="timeline__event__content">
-                       <div class="timeline__event__title">
-                         Exercise
-                       </div>
-                       <div class="timeline__event__description">
-                         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel, nam! Nam eveniet ut aliquam ab asperiores, accusamus iure veniam corporis incidunt reprehenderit accusantium id aut architecto harum quidem dolorem in!</p>
-                       </div>
-                 
-                     </div>
-                   </div>
-                   <div class="timeline__event animated fadeInUp timeline__event--type1">
-                     <div class="timeline__event__icon">
-                       <i class="bi bi-arrow-down"></i>
-                 
-                     </div>
-                     <div class="timeline__event__date">
-                       20-08-2019
-                     </div>
-                     <div class="timeline__event__content">
-                       <div class="timeline__event__title">
-                         Birthday
-                       </div>
-                       <div class="timeline__event__description">
-                         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vel, nam! Nam eveniet ut aliquam ab asperiores, accusamus iure veniam corporis incidunt reprehenderit accusantium id aut architecto harum quidem dolorem in!</p>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-            </div>
+          <div class="col-md-12">
+            
+            @foreach (var document in Model)
+            {
+                if (document.CurrentStatus == "Forwarded")
+                {
+                    <div class="timeline">
+                        <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type3">
+                            <div class="timeline__event__icon ">
+                                <i class="bi bi-arrow-up"></i>
+                            </div>
+                            <div class="timeline__event__date">
+                                @document.ModifiedDateString
+                            </div>
+                            <div class="timeline__event__content ">
+                                <div class="timeline__event__title">
+                                    @document.Title
+                                </div>
+                                <div class="timeline__event__description">
+                                    <div class="tracking__information">
+                                        <p><strong>Current Status: </strong> @document.CurrentStatus</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Author: </strong> @document.OriginalAuthor</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Route Department: </strong> @document.RouteDepartment</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Request Type: </strong> @document.RequestType</p>
+                                    </div>
+                                    <div class="tracking__information tracking__information-description">
+                                        <p><strong>Content</strong></p>
+                                        <p>@document.Content</p>
+                                    </div>
+                                    <div class="tracking__information tracking__information-description">
+                                        <p><strong>Remarks</strong></p>
+                                        <p>@document.Remarks</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }else if (document.CurrentStatus == "Completed")
+                {
+                    <div class="timeline">
+                        <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type2">
+                            <div class="timeline__event__icon ">
+                                <i class="bi bi-check2"></i>
+                            </div>
+                            <div class="timeline__event__date">
+                                @document.ModifiedDateString
+                            </div>
+                            <div class="timeline__event__content ">
+                                <div class="timeline__event__title">
+                                    @document.Title
+                                </div>
+                                <div class="timeline__event__description">
+                                    <div class="tracking__information">
+                                        <p><strong>Current Status: </strong> @document.CurrentStatus</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Author: </strong> @document.OriginalAuthor</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Holder: </strong> @document.Holder</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Request Type: </strong> @document.RequestType</p>
+                                    </div>
+                                    <div class="tracking__information tracking__information-description">
+                                        <p><strong>Content</strong></p>
+                                        <p>@document.Content</p>
+                                    </div>
+                                    <div class="tracking__information tracking__information-description">
+                                        <p><strong>Remarks</strong></p>
+                                        <p>@document.Remarks</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }else if (document.CurrentStatus == "Received")
+                {
+                    <div class="timeline">
+                        <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type1">
+                            <div class="timeline__event__icon ">
+                                <i class="bi bi-arrow-down"></i>
+
+                            </div>
+                            <div class="timeline__event__date">
+                                @document.ModifiedDateString
+                            </div>
+                            <div class="timeline__event__content ">
+                                <div class="timeline__event__title">
+                                    @document.Title
+                                </div>
+                                <div class="timeline__event__description">
+                                    <div class="tracking__information">
+                                        <p><strong>Current Status: </strong> @document.CurrentStatus</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Author: </strong> @document.OriginalAuthor</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Holder: </strong> @document.Holder</p>
+                                    </div>
+                                    <div class="tracking__information">
+                                        <p><strong>Request Type: </strong> @document.RequestType</p>
+                                    </div>
+                                    <div class="tracking__information tracking__information-description">
+                                        <p><strong>Content</strong></p>
+                                        <p>@document.Content</p>
+                                    </div>
+                                    <div class="tracking__information tracking__information-description">
+                                        <p><strong>Remarks</strong></p>
+                                        <p>@document.Remarks</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+                
+            }
+
+          </div>
         </div>
     </div>
 </div> 

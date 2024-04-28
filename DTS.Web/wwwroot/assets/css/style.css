@@ -1633,11 +1633,11 @@ div.dataTables_wrapper div.dataTables_filter {
 .timeline {
   display: flex;
   flex-direction: column;
-  margin: 20px auto;
+  margin: 5px auto;
   position: relative;
 }
 .timeline__event {
-  margin-bottom: 20px;
+  margin-bottom: 13px;
   position: relative;
   display: flex;
   margin: 20px 0;
@@ -1683,7 +1683,7 @@ div.dataTables_wrapper div.dataTables_filter {
   animation: fillLeft 2s forwards 4s ease-in-out;
 }
 .timeline__event__title {
-  font-size: 1rem;
+  font-size: .9rem;
   line-height: 1.4;
   text-transform: uppercase;
   font-weight: 600;
@@ -1756,7 +1756,7 @@ div.dataTables_wrapper div.dataTables_filter {
 }
 .timeline__event__description {
   flex-basis: 60%;
-  font-size: .9rem;
+  font-size: .9rem !important;
 }
 .timeline__event--type2:after {
   background: #555ac0;
@@ -1865,4 +1865,21 @@ div.dataTables_wrapper div.dataTables_filter {
   100% {
     left: 100%;
   }
+}
+
+
+div.timeline__event__title{
+  margin-bottom: 12px !important;
+}
+
+
+.tracking__information{
+  padding: 0;
+  margin-bottom: 12px;
+}
+
+.tracking__information > p{
+  font-size: 12px;
+  padding: 0;
+  margin: 0 ;
 }

@@ -376,7 +376,7 @@ public class DocumentStatusController : Controller
     {
          
         string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var employee = await _dbContext.Employees.Where(e => e.UserId == userId).FirstOrDefaultAsync();
+        var employee = await _dbContext.Employees.Include(e => e.Department).Where(e => e.UserId == userId).FirstOrDefaultAsync();
         var document = await _dbContext.Documents.Where(d => d.Id == documentStatus.DocumentId).FirstOrDefaultAsync();
         
         if (employee.Id == document.CreatedBy && document.StatusId == (int)StatusEnum.Received)
@@ -396,14 +396,15 @@ public class DocumentStatusController : Controller
             transactionHistory.Content = document.Content;
             transactionHistory.CreatedDate = document.CreatedDate;
             transactionHistory.CreatedBy = document.CreatedBy;
-            transactionHistory.RouteDepartmentId = documentStatus.RouteDepartmentId;
+            transactionHistory.RouteDepartmentId = employee.DepartmentId;
             transactionHistory.RequestTypeId = document.RequestTypeId;
             transactionHistory.DocumentId = document.Id;
         
             transactionHistory.ModifiedBy = documentStatus.EmployeeId;
             transactionHistory.ModifiedDate = DateTime.Now;
             transactionHistory.StatusId = (int)StatusEnum.Completed;
-            document.Remarks = "COMPLETED";
+            transactionHistory.Remarks = "COMPLETED";
+            
  
             await _dbContext.TrackingHistories.AddAsync(transactionHistory);
             await _dbContext.SaveChangesAsync();
