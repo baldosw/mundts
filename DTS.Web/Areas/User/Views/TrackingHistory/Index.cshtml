@@ -18,11 +18,52 @@
                         <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
                     </div>
                 </form>
-                @if (Model is not null && Model.Count > 0)
+                @if (Model != null && Model.Count > 0)
                 {
                 @foreach (var document in Model)
                     {
                         if (document.CurrentStatus == "Forwarded")
+                        {
+                            <div class="timeline">
+                                <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type3">
+                                    <div class="timeline__event__icon ">
+                                        <i class="bi bi-arrow-down"></i>
+                                    </div>
+                                    <div class="timeline__event__date">
+                                        @document.ModifiedDateString
+                                    </div>
+                                    <div class="timeline__event__content ">
+                                        <div class="timeline__event__title">
+                                            @document.Title
+                                        </div>
+                                        <div class="timeline__event__description">
+                                            <div class="tracking__information">
+                                                <p><strong>Current Status: </strong> @document.CurrentStatus</p>
+                                            </div>
+                                            <div class="tracking__information">
+                                                <p><strong>Author: </strong> @document.OriginalAuthor</p>
+                                            </div>
+                                            <div class="tracking__information">
+                                                <p><strong>Route Department: </strong> @document.RouteDepartment</p>
+                                            </div>
+                                            <div class="tracking__information">
+                                                <p><strong>Request Type: </strong> @document.RequestType</p>
+                                            </div>
+                                            <div class="tracking__information tracking__information-description">
+                                                <p><strong>Content</strong></p>
+                                                <p>@document.Content</p>
+                                            </div>
+                                            <div class="tracking__information tracking__information-description">
+                                                <p><strong>Remarks</strong></p>
+                                                <p>@document.Remarks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                        else if (document.StatusId == (int)StatusEnum.Forwarded)
                         {
                             <div class="timeline">
                                 <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type3">
@@ -63,7 +104,48 @@
 
                             </div>
                         }
-                        else if (document.CurrentStatus == "Completed")
+                        
+                        else if (document.StatusId == (int)StatusEnum.Received)
+                        {
+                            <div class="timeline">
+                                <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type1">
+                                    <div class="timeline__event__icon ">
+                                        <i class="bi bi-envelope-open"></i>
+
+                                    </div>
+                                    <div class="timeline__event__date">
+                                        @document.ModifiedDateString
+                                    </div>
+                                    <div class="timeline__event__content ">
+                                        <div class="timeline__event__title">
+                                            @document.Title
+                                        </div>
+                                        <div class="timeline__event__description">
+                                            <div class="tracking__information">
+                                                <p><strong>Current Status: </strong> @document.CurrentStatus</p>
+                                            </div>
+                                            <div class="tracking__information">
+                                                <p><strong>Author: </strong> @document.OriginalAuthor</p>
+                                            </div>
+                                            
+                                            <div class="tracking__information">
+                                                <p><strong>Request Type: </strong> @document.RequestType</p>
+                                            </div>
+                                            <div class="tracking__information tracking__information-description">
+                                                <p><strong>Content</strong></p>
+                                                <p>@document.Content</p>
+                                            </div>
+                                            <div class="tracking__information tracking__information-description">
+                                                <p><strong>Remarks</strong></p>
+                                                <p>@document.Remarks</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                        else if (document.StatusId == (int)StatusEnum.Completed)
                         {
                             <div class="timeline">
                                 <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type2">
@@ -84,51 +166,7 @@
                                             <div class="tracking__information">
                                                 <p><strong>Author: </strong> @document.OriginalAuthor</p>
                                             </div>
-                                            <div class="tracking__information">
-                                                <p><strong>Holder: </strong> @document.Holder</p>
-                                            </div>
-                                            <div class="tracking__information">
-                                                <p><strong>Request Type: </strong> @document.RequestType</p>
-                                            </div>
-                                            <div class="tracking__information tracking__information-description">
-                                                <p><strong>Content</strong></p>
-                                                <p>@document.Content</p>
-                                            </div>
-                                            <div class="tracking__information tracking__information-description">
-                                                <p><strong>Remarks</strong></p>
-                                                <p>@document.Remarks</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        }
-                        else if (document.CurrentStatus == "Received")
-                        {
-                            <div class="timeline">
-                                <div class="timeline__event  animated fadeInUp delay-3s timeline__event--type1">
-                                    <div class="timeline__event__icon ">
-                                        <i class="bi bi-arrow-down"></i>
-
-                                    </div>
-                                    <div class="timeline__event__date">
-                                        @document.ModifiedDateString
-                                    </div>
-                                    <div class="timeline__event__content ">
-                                        <div class="timeline__event__title">
-                                            @document.Title
-                                        </div>
-                                        <div class="timeline__event__description">
-                                            <div class="tracking__information">
-                                                <p><strong>Current Status: </strong> @document.CurrentStatus</p>
-                                            </div>
-                                            <div class="tracking__information">
-                                                <p><strong>Author: </strong> @document.OriginalAuthor</p>
-                                            </div>
-                                            <div class="tracking__information">
-                                                <p><strong>Holder: </strong> @document.Holder</p>
-                                            </div>
+                                           
                                             <div class="tracking__information">
                                                 <p><strong>Request Type: </strong> @document.RequestType</p>
                                             </div>

@@ -431,8 +431,6 @@ var documentColumns = {
         { data: 'title', width: '20%' },
         {data: 'requestType', width: '10%'},
         {data: 'currentStatus', width: '10%'},
-        {data: 'routeDepartment', width: '10%'},
-        {data: 'holder', width: '10%'},
         {data:'createdDateString', width: '10%'},
         {data:'createdTimestamp', visible: false},
         {

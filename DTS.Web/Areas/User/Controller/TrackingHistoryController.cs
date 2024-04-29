@@ -82,11 +82,11 @@ public class TrackingHistoryController : Controller
                 StatusId = document.StatusId.Value,
                 CreatedBy = document.CreatedBy,
                 ModifiedBy = document.ModifiedBy,
-                CurrentStatus = status.Title,
+                CurrentStatus = $"{status.Title} - {routeDepartment.Name}",
                 CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
                 ModifiedDateString = document.ModifiedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
                 RouteDepartment = routeDepartment.Name,
-                Holder = $"{holderEmployee.FirstName} {holderEmployee.MiddleName[0]} {holderEmployee.LastName} - ({routeDepartment.Name})",
+                Holder = $"{holderEmployee.FirstName} {holderEmployee.MiddleName[0]} {holderEmployee.LastName} ",
                 OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();

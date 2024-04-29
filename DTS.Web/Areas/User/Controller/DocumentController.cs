@@ -119,10 +119,10 @@ public class DocumentController : Controller
                 StatusId = document.StatusId.Value,
                 CreatedBy = document.CreatedBy,
                 ModifiedBy = document.ModifiedBy,
-                CurrentStatus = status.Title,
+                CurrentStatus = $"{status.Title} - {routeDepartment.Name}",
                 CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
                 RouteDepartment = routeDepartment.Name,
-                Holder = $"{holderEmployee.FirstName} {holderEmployee.MiddleName[0]} {holderEmployee.LastName} - ({routeDepartment.Name})",
+                Holder = $"{holderEmployee.FirstName} {holderEmployee.MiddleName[0]} {holderEmployee.LastName}  ",
                 OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();
@@ -161,9 +161,9 @@ public class DocumentController : Controller
                 RouteDepartmentId = document.RouteDepartmentId,
                 StatusId = document.StatusId.Value,
                 OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
-                CurrentStatus = status.Title,
+                CurrentStatus = $"{status.Title} - {routeDepartment.Name}",
                 RouteDepartment = routeDepartment.Name,
-                Holder = $"{holderEmployee.FirstName} {holderEmployee.MiddleName[0]} {holderEmployee.LastName} - ({routeDepartment.Name})",
+                Holder = $"{holderEmployee.FirstName} {holderEmployee.MiddleName[0]} {holderEmployee.LastName} ",
                 CreatedDateString = document.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).SingleOrDefaultAsync();
