@@ -2,6 +2,7 @@ using System.Configuration;
 using DTS.Common;
 using DTS.Common.Utility;
 using DTS.DataAccess;
+using DTS.Web.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -53,12 +54,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = $"/AccessDenied";
 });
 
- 
- 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
-
-
-
 var app = builder.Build();
  
 // Configure the HTTP request pipeline.
@@ -80,9 +76,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 
+app.UseMiddleware<RequestCultureMiddleware>();
+
 // app.MapControllerRoute(
 //     name: "default",
 //     pattern: "{area=User}/{controller=Document}/{action=Index}/{id?}");
+
+
 
 app.MapControllerRoute(
     name: "default",

@@ -450,7 +450,7 @@ var documentColumns = {
                                 Update</a>
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
                                    <i class="bi bi-printer"></i>
-                                    Print
+                                 Details
                                 </a>                          
                             </div>                             
                         </div>

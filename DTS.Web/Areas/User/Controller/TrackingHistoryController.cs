@@ -28,6 +28,21 @@ public class TrackingHistoryController : Controller
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
         ViewData["employeeId"] = employee.Id;
+        
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
+        
+        
         return View();
     }
     [HttpPost]
@@ -75,6 +90,19 @@ public class TrackingHistoryController : Controller
                 OriginalAuthor = $"{employeeFromDb.FirstName} {employeeFromDb.MiddleName[0]} {employeeFromDb.LastName} - ({department.Name})",
                 CreatedTimestamp = (long)(document.CreatedDate - new DateTime(1970, 1, 1)).TotalSeconds
             }).ToListAsync();
+        
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
         
         return View(documents);
     }

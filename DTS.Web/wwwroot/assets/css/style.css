@@ -1878,3 +1878,7 @@ div.dataTables_wrapper div.dataTables_filter {
   padding: 0;
   margin: 0 ;
 }
+
+.nav-link {
+  padding: 0.2rem;
+}

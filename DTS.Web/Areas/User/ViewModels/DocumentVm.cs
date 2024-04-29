@@ -78,5 +78,7 @@ public class DocumentVm
     public int CreatedBy { get; set; }
 
     public int ModifiedBy { get; set; }
+
+    public int DocumentCount { get; set; }
  
 }

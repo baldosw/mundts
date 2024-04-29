@@ -69,12 +69,41 @@
 <ul class="d-flex align-items-center">
  
  
+<li class="nav-item ">
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-arrow-down-square"></i>
+            <span class="badge bg-primary badge-number" style="background-color: #9251ac !important;">@ViewData["Incoming"]</span>
+          </a><!-- End Notification Icon -->
+</li> 
+<li class="nav-item ">
 
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-arrow-up-square"></i>
+            <span class="badge bg-primary badge-number" style="background-color: #24b47e !important;">@ViewData["Forwarded"]</span>
+          </a><!-- End Notification Icon -->
+ 
+</li> 
+<li class="nav-item ">
+
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-envelope-open"></i>
+            <span class="badge bg-primary badge-number" style="background-color: #F7AB48 !important;">@ViewData["Received"]</span>
+          </a><!-- End Notification Icon -->
+ 
+</li>
+<li class="nav-item ">
+
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-check-square"></i>
+            <span class="badge bg-primary badge-number" style="background-color: #555ac0 !important;">@ViewData["Completed"]</span>
+          </a><!-- End Notification Icon -->
+ 
+</li> 
 
 <li class="nav-item dropdown pe-3">
 
     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-        <img src="~/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+ 
         <span class="d-none d-md-block dropdown-toggle ps-2">@ViewData["FirstName"] @ViewData["LastName"]</span>
     </a><!-- End Profile Iamge Icon -->
 

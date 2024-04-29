@@ -38,6 +38,19 @@ public class PersonalInformationController : Controller
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] =  employee.Department.ShortName;
         personalInformationVm.Employee = employee; 
+        
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
           
         return View(personalInformationVm);
     }

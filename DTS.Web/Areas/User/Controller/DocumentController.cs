@@ -38,7 +38,7 @@ public class DocumentController : Controller
             Text = entity.Name,
             Value = entity.Id.ToString()
         }).ToList();
-        
+         
         string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var employee =  await _dbContext.Employees.Include(e => e.Department).Where(e => e.UserId == userId).FirstOrDefaultAsync();
 
@@ -46,7 +46,20 @@ public class DocumentController : Controller
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
         ViewData["employeeId"] = employee.Id;
-       
+         
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
+ 
         return View(documentVm);
     }
     

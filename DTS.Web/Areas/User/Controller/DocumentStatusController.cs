@@ -35,6 +35,19 @@ public class DocumentStatusController : Controller
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
         
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
+        
         return View();
     }
     
@@ -46,6 +59,20 @@ public class DocumentStatusController : Controller
         ViewData["FirstName"] = employee.FirstName;
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
+        
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
+        
         return View();
     }
     
@@ -59,6 +86,19 @@ public class DocumentStatusController : Controller
         ViewData["FirstName"] = employee.FirstName;
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
+        
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
         
         documentVm.Departments = _dbContext.Departments.Select(entity => new SelectListItem
         {
@@ -77,6 +117,20 @@ public class DocumentStatusController : Controller
         ViewData["FirstName"] = employee.FirstName;
         ViewData["LastName"] = employee.LastName;
         ViewData["DepartmentShort"] = employee.Department.ShortName;
+        
+        if (HttpContext.Items.ContainsKey("Received"))
+        {
+            var receivedMiddlewareValue = HttpContext.Items["Received"];
+            var forwardedMiddlewareValue = HttpContext.Items["Forwarded"];
+            var completedMiddlewareValue = HttpContext.Items["Completed"];
+            var incomingMiddlewareValue = HttpContext.Items["Incoming"];
+            
+            ViewData["Received"] = receivedMiddlewareValue;
+            ViewData["Forwarded"] = forwardedMiddlewareValue;
+            ViewData["Completed"] = completedMiddlewareValue;
+            ViewData["Incoming"] = incomingMiddlewareValue;
+        }
+        
         return View();
     }
     
