@@ -124,6 +124,13 @@
             </a>
         </li>
         <li>
+            <a class="dropdown-item d-flex align-items-center" asp-area="User" asp-controller = "ChangePassword" asp-action = "Index">
+                <i class="bi bi-lock"></i>
+                <span>Change Password</span>
+            </a>
+        </li>
+        
+        <li>
             <hr class="dropdown-divider">
         </li>
          
@@ -194,6 +201,11 @@
                        <i class="bi bi-person"></i><span>Tracking History</span> 
                 </a>
          </li><!-- End Components Nav -->
+           <li class="nav-item">
+                        <a class="nav-link "  asp-area="User" asp-controller = "ChangePassword" asp-action = "Index">
+                               <i class="bi bi-lock"></i><span>Change Password</span> 
+                        </a>
+           </li><!-- End Components Nav -->
         
         
         <li class="nav-item">

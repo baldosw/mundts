@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ChangePasswordVm
+
+@{
+    ViewData["Title"] = "Change Password";
+    Layout = "_Layout";
+}
+ 
+<div class="card">
+    <h5 class="card-title" id="tableTitle">@ViewData["card-title"]</h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-12">
+                    @if((bool)ViewData["PasswordChangedSuccess"])
+                    {
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            Successfully changed password
+                        </div>
+                    }
+                    @if((bool)ViewData["WithErrors"])
+                    {
+                        <div asp-validation-summary="All" class="alert alert-danger alert-dismissible" role="alert"></div>
+                    }
+                     
+                    <form class="row g-3" method="post" asp-area="User" asp-controller="ChangePassword" asp-action="Index">
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-center align-items-center flex-column">
+                                <div class="mb-3">
+                                    <label asp-for="OldPassword" class="form-label">Old Password</label>
+                                    <input type="password" class="form-control" asp-for="OldPassword" id="oldPassword" style="width: 400px">
+                                    <span asp-validation-for="OldPassword" class="text-danger small"></span>
+                                </div>
+                                <div  class="mb-3">
+                                    <label asp-for="NewPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" asp-for="NewPassword" id="newPassword" style="width: 400px">
+                                    <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="ConfirmNewPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" asp-for="ConfirmNewPassword" id="confirmNewPassword" style="width: 400px">
+                                    <span asp-validation-for="ConfirmNewPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-5">
+                            <a class="btn btn-secondary" asp-area="User" asp-controller="Document" asp-action="Index">Back</a>
+                            <button type="submit" class="btn btn-primary" id="btnChangePassword">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+ 
