@@ -447,7 +447,7 @@ var documentColumns = {
                                 <i class="bi bi-pencil-square" ></i>
                                 Update</a>
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
-                                   <i class="bi bi-printer"></i>
+                                   <i class="bi bi-eye"></i>
                                  Details
                                 </a>                          
                             </div>                             
@@ -465,8 +465,8 @@ var documentColumns = {
                                 <i class="bi bi-pencil-square" ></i>
                                 Complete</a>                            
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
-                                   <i class="bi bi-printer"></i>
-                                    Print
+                                   <i class="bi bi-eye"></i>
+                                    Details
                                 </a>                          
                             </div>                             
                         </div>
@@ -479,8 +479,8 @@ var documentColumns = {
                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"   >    
                                            
                                 <a class="dropdown-item" href="#" style = "font-size: 12px !important;" onclick='loadPrintDocument("/user/document/getdocument/${data}")'>
-                                   <i class="bi bi-printer"></i>
-                                    Print
+                                   <i class="bi bi-eye"></i>
+                                    Details
                                 </a>                          
                             </div>                             
                         </div>

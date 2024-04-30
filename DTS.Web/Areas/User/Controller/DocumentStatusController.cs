@@ -438,6 +438,7 @@ public class DocumentStatusController : Controller
             document.ModifiedBy = documentStatus.EmployeeId;
             document.ModifiedDate = DateTime.Now;
             document.StatusId = (int)StatusEnum.Completed;
+            document.RouteDepartmentId = employee.DepartmentId;
             document.Remarks = "COMPLETED";
             _dbContext.Update(document);
             await _dbContext.SaveChangesAsync();
