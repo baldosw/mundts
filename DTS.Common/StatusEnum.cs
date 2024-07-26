@@ -2,8 +2,8 @@
 
 public enum StatusEnum
 {
-    Forwarded = 1,
-    Received = 2,
-    Cancelled = 3,
-    Completed= 4
+    Forwarded = 3,
+    Received = 4,
+    Cancelled = 5,
+    Completed= 6
 }

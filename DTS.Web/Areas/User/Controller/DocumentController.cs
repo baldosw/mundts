@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace DTS.Web.Controllers;
 
@@ -17,11 +18,13 @@ public class DocumentController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ILogger<DocumentController> _logger;
     
-    public DocumentController(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public DocumentController(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, ILogger<DocumentController> logger)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Index()
@@ -368,6 +371,58 @@ public class DocumentController : Controller
         
 
     }
+    
+    [HttpPost]
+    public IActionResult GetAllDocuments()
+{
+    try
+    {
+        var draw = Request.Form["draw"].FirstOrDefault();
+        var start = Request.Form["start"].FirstOrDefault();
+        var length = Request.Form["length"].FirstOrDefault();
+        var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+        var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+        var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+        int pageSize = length != null ? Convert.ToInt32(length) : 0;
+        int skip = start != null ? Convert.ToInt32(start) : 0;
+        int recordsTotal = 0;
+
+        // Log the received parameters for debugging
+        _logger.LogInformation($"Draw: {draw}, Start: {start}, Length: {length}, SortColumn: {sortColumn}, SortDirection: {sortColumnDirection}, SearchValue: {searchValue}");
+
+        var customerData = from tempcustomer in _dbContext.Documents select tempcustomer;
+
+        if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+        {
+            customerData = customerData.OrderBy(sortColumn + " " + sortColumnDirection);
+        }
+
+        if (!string.IsNullOrEmpty(searchValue))
+        {
+            customerData = customerData.Where(m => m.Title.Contains(searchValue)
+                                                   || m.Remarks.Contains(searchValue)
+                                                   || m.Content.Contains(searchValue));
+
+        }
+
+        recordsTotal = customerData.Count();
+
+        var data = customerData.Skip(skip).Take(pageSize).ToList();
+        
+        _logger.LogInformation($"Retrieved Data: {data.Count}");
+
+        var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+
+        return Ok(jsonData);
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error occurred while fetching customer data.");
+        return StatusCode(500, "Internal server error");
+    }
+}
+
 
 
     #endregion

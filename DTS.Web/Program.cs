@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
 }); 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"))); 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("connection"))); 
 
 // builder.Services.AddDefaultIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
